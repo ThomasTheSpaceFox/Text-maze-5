@@ -1,0 +1,50 @@
+TEXT MAZE FORMAT 2 TECHNICAL DOCUMENTATION
+
+NODES. nodes are different from tiles. this is used for triggered events such as trig and look.
+	all nodes have x and y attributes.
+	TYPES:
+	look: define text for the player character to "say" when he 
+		looks around on a defined grid point.
+	trig: trigger the player character to "say" text at a point.
+	label: a small visible text label in the maze.
+		note the "area" attribute:
+		"i"=inside "o"=outside "b"=both inside & outside
+		This determines the visibility of the label. it is possible to have
+		separate labels for inside and outside on the same grid point.
+	overlay: display overlay type: "type" at "x" and "y".
+		some overlays feature characters that can act as "npc-like" entities
+		perhaps someone giving a hint? perhaps with a label node?
+		or perhaps some casual chat with the conv node? :)
+		note the "area" attribute:
+		"i"=inside "o"=outside "b"=both inside & outside
+		This determines the visibility of the overlay. it is possible to have
+		separate overlays for inside and outside on the same grid point.
+	walkable: force a gridpoint to be either "0" (walkable) or "1" (nonwalkable)
+		notice how this doesn't affect the apperance of the tile.
+	teleport: when the player reaches point "x" and "y", teleport the player to point "destx" and "desty".
+	conv: when the player presses "t" at point "x" "y", spawn the conversation
+		in the text span of the conv tag.
+		each line is iterated, 1 at a time. see the included maze xml files for examples. 
+
+
+valid tiles:
+"1" hedge (wall) (outside)
+"0" concrete path (floor) (outside)
+"B" brick path (floor) (outside)
+"3" exit tile (floor) (both/special) each maze should have 1 of these at the "end"
+"w" water (wall) (outside)
+"g" grass (floor) (outside)
+"b" bridge (floor) (outside)
+"d" dock (floor) (outside)
+"R" building wall (wall) (technically outside. (player would seem to bw on a roof if spawned on one.)
+"r" red carpet (floor) (inside)
+"c" blue carpet (floor) (inside)
+"t" tile floor (floor) (inside)
+
+valid overlay types:
+"2" bunny npc laying on beach towel
+"3" bunny npc laying on raft
+"4" bunny npc standing
+"flowers" some assorted flowers on the ground
+"sink" a sink
+"toilet" a toilet

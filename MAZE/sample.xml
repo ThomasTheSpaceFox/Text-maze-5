@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<main>
+	<setup>
+		<mazename>sample maze</mazename>
+		<startposx>2</startposx>
+		<startposy>2</startposy>
+		<subdir>sample</subdir>
+		
+	</setup>
+	<!--NODES. nodes are different from tiles. this is used for triggered events such as trig and look.
+	all nodes have x and y attributes.
+	TYPES:
+	look: define text for the player character to "say" when he 
+		looks around on a defined grid point.
+	trig: trigger the player character to "say" text at a point.
+	label: a small visible text label in the maze.
+		note the "area" attribute:
+		"i"=inside "o"=outside "b"=both inside & outside
+		This determines the visibility of the label. it is possible to have
+		separate labels for inside and outside on the same grid point.
+	overlay: display overlay type: "type" at "x" and "y".
+		some overlays feature characters that can act as "npc-like" entities
+		perhaps someone giving a hint? perhaps with a label node?
+		or perhaps some casual chat with the conv node? :)
+		note the "area" attribute:
+		"i"=inside "o"=outside "b"=both inside & outside
+		This determines the visibility of the overlay. it is possible to have
+		separate overlays for inside and outside on the same grid point.
+	walkable: force a gridpoint to be either "0" (walkable) or "1" (nonwalkable)
+		notice how this doesn't affect the apperance of the tile.-->
+	<nodes>
+		<look x="5" y="18" text="Aww.. Left my swimming trunks at home."/>
+		<look x="10" y="3" text="All I see is this long hallway." />
+		<look x="9" y="3" text="All I see is this long hallway." />
+		<conv x="2" y="10">Bun: The clear path may not be the way.
+You: Darn.
+You: Hey, why do I not have a raft?
+Bun: because.
+You: oh.</conv>
+		<conv x="35" y="2">Bun: Doors are not always labeled.
+You: So, that door could be anywhere... &lt;.&lt;
+Bun: quite!</conv>
+		<conv x="35" y="15">You: How do you get around so fast?
+Bun: Thats classified.</conv>
+		<trig x="4" y="3" text="wow." />
+		<trig x="6" y="3" text="Nice pad."/>
+		<trig x="23" y="7" text="What a sunny day!"/>
+		<trig x="18" y="22" text="Not again! D:"/>
+		<trig x="39" y="20" text="a wall? Thats mean!"/>
+		<trig x="31" y="24" text="*grrr...* &gt;.&gt;"/>
+		<trig x="44" y="8"  text="I will need to find another way." />
+		<trig x="31" y="26" text="ARRGGH! DX"/>
+		<trig x="26" y="24" text="wasn't that a-maze-ing? :D"/>
+		<trig x="24" y="21" text="Hmm.. a hedge maze."/>
+		<trig x="46" y="7" text="Ooh! Flowers!"/>
+		<trig x="46" y="8" text="Ooh! Flowers!"/>
+		<label x="24" y="3" area="i" text="&lt;- History Tour" />
+		<label x="3" y="11" area="o" text="The clear path may not be the way." />
+		<label x="3" y="4" area="i" text="use the arrow keys or wasd to move." />
+		<label x="10" y="4" area="i" text="press the L key to look around." />
+		<label x="44" y="9" area="b" text="Uh Oh.." />
+		<label x="31" y="2" area="o" text="EXIT" />
+		<label x="31" y="7" area="b" text="EXIT 2" />
+		<label x="35" y="3" area="b" text="press T to talk." />
+		<overlay x="55" y="4" area="i" type="sink"/>
+		<walkable x="55" y="4" force="1"/>
+		<overlay x="56" y="4" area="i" type="toilet"/>
+		<walkable x="56" y="4" force="1"/>
+		<overlay x="46" y="7" area="b" type="flowers"/>
+		<overlay x="46" y="8" area="b" type="flowers"/>
+		<overlay x="47" y="7" area="b" type="flowers"/>
+		<overlay x="47" y="8" area="b" type="flowers"/>
+		<overlay x="45" y="7" area="b" type="flowers"/>
+		<overlay x="45" y="8" area="b" type="flowers"/>
+		<overlay x="35" y="3" area="o" type="2"/>
+		<overlay x="2" y="11" area="o" type="3"/>
+		<overlay x="36" y="15" area="o" type="3"/>
+		<overlay x="45" y="2" area="i" type="4"/>
+		<walkable x="45" y="2" force="1"/>
+		<teleport x="46" y="3" destx="48" desty="2" />
+		<trig x="48" y="2" text="woah.."/>
+		<teleport x="22" y="17" destx="46" desty="15" />
+		<trig x="46" y="15" text="Wha? Here again?"/>
+		<overlay x="50" y="21" area="o" type="2"/>
+		<conv x="50" y="20">Bun: congrads.
+Bun: You found a secret!</conv>
+		<teleport x="46" y="23" destx="17" desty="19" />
+		<trig x="17" y="19" text="This is one strange place."/>
+		<teleport x="51" y="3" destx="45" desty="5" />
+		<trig x="45" y="5" text="Creepy..."/>
+		<conv x="44" y="2">You: I found the door!
+Bun: I can see this.
+Continue on your journey. 
+You have much to see.
+You: but where do i go now?
+Bun: The tiled floor section behind me.
+You: what about it?
+Bun: Walk on it!</conv>
+		
+
+		
+	</nodes>
+	<maingrid>sample.main.grid</maingrid>
+</main>
