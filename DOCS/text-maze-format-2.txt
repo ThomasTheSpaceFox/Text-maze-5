@@ -19,6 +19,8 @@ NODES. nodes are different from tiles. this is used for triggered events such as
 		"i"=inside "o"=outside "b"=both inside & outside
 		This determines the visibility of the overlay. it is possible to have
 		separate overlays for inside and outside on the same grid point.
+		the optional "rotate" attribute can specify that the overlay be rotated.
+		"0"=normal "1"=90 degrees "2"=180 degrees "3"=270 degrees
 	walkable: force a gridpoint to be either "0" (walkable) or "1" (nonwalkable)
 		notice how this doesn't affect the apperance of the tile.
 	teleport: when the player reaches point "x" and "y", teleport the player to point "destx" and "desty".
@@ -48,3 +50,12 @@ valid overlay types:
 "flowers" some assorted flowers on the ground
 "sink" a sink
 "toilet" a toilet
+
+hudface ("face") attribute:
+the look and trig nodes have an optional "face" attribute.
+it can be used to change the "hud face" for that event.
+1=casual (default)
+2=sad
+3=angry
+4=shock
+5=happy

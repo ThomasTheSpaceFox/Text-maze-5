@@ -29,42 +29,42 @@
 	walkable: force a gridpoint to be either "0" (walkable) or "1" (nonwalkable)
 		notice how this doesn't affect the apperance of the tile.-->
 	<nodes>
-		<look x="5" y="18" text="Aww.. Left my swimming trunks at home."/>
-		<look x="10" y="3" text="All I see is this long hallway." />
-		<look x="9" y="3" text="All I see is this long hallway." />
+		<look x="5" y="18" face="2" text="Aww.. Left my swimming trunks at home."/>
+		<look x="10" y="3" face="4" text="Hey, I see someone up ahead!" />
+		<look x="9" y="3" face="4" text="Hey, I see someone up ahead!" />
 		<conv x="2" y="10">Bun: The clear path may not be the way.
 You: Darn.
 You: Hey, why do I not have a raft?
 Bun: because.
 You: oh.</conv>
-		<conv x="35" y="2">Bun: Doors are not always labeled.
+		<conv x="35" y="2" face="5">
+Bun: Doors are not always labeled.
 You: So, that door could be anywhere... &lt;.&lt;
 Bun: quite!</conv>
-		<conv x="35" y="15">You: How do you get around so fast?
+		<conv x="35" y="15" face="4">You: How do you get around so fast?
 Bun: Thats classified.</conv>
 		<trig x="4" y="3" text="wow." />
 		<trig x="6" y="3" text="Nice pad."/>
-		<trig x="23" y="7" text="What a sunny day!"/>
-		<trig x="18" y="22" text="Not again! D:"/>
-		<trig x="39" y="20" text="a wall? Thats mean!"/>
-		<trig x="31" y="24" text="*grrr...* &gt;.&gt;"/>
+		<trig x="23" y="7" face="5" text="What a sunny day!"/>
+		<trig x="18" y="22" face="2" text="Not again! D:"/>
+		<trig x="39" y="20"  face="2" text="a wall? Thats mean!"/>
+		<trig x="31" y="24"  face="3" text="*grrr...* &gt;.&gt;"/>
 		<trig x="44" y="8"  text="I will need to find another way." />
-		<trig x="31" y="26" text="ARRGGH! DX"/>
-		<trig x="26" y="24" text="wasn't that a-maze-ing? :D"/>
+		<trig x="31" y="26" face="3" text="ARRGGH! DX"/>
+		<trig x="26" y="24" face="5" text="wasn't that a-maze-ing? :D"/>
 		<trig x="24" y="21" text="Hmm.. a hedge maze."/>
-		<trig x="46" y="7" text="Ooh! Flowers!"/>
-		<trig x="46" y="8" text="Ooh! Flowers!"/>
-		<label x="24" y="3" area="i" text="&lt;- History Tour" />
+		<trig x="46" y="7" face="4"  text="Ooh! Flowers!"/>
+		<trig x="46" y="8" face="4"  text="Ooh! Flowers!"/>
 		<label x="3" y="11" area="o" text="The clear path may not be the way." />
 		<label x="3" y="4" area="i" text="use the arrow keys or wasd to move." />
 		<label x="10" y="4" area="i" text="press the L key to look around." />
 		<label x="44" y="9" area="b" text="Uh Oh.." />
 		<label x="31" y="2" area="o" text="EXIT" />
 		<label x="31" y="7" area="b" text="EXIT 2" />
-		<label x="35" y="3" area="b" text="press T to talk." />
-		<overlay x="55" y="4" area="i" type="sink"/>
+		<label x="16" y="3" area="b" text="press T to talk." />
+		<overlay x="55" y="4" area="i" type="sink" rotate="0"/>
 		<walkable x="55" y="4" force="1"/>
-		<overlay x="56" y="4" area="i" type="toilet"/>
+		<overlay x="56" y="4" area="i" type="toilet" rotate="0"/>
 		<walkable x="56" y="4" force="1"/>
 		<overlay x="46" y="7" area="b" type="flowers"/>
 		<overlay x="46" y="8" area="b" type="flowers"/>
@@ -72,22 +72,30 @@ Bun: Thats classified.</conv>
 		<overlay x="47" y="8" area="b" type="flowers"/>
 		<overlay x="45" y="7" area="b" type="flowers"/>
 		<overlay x="45" y="8" area="b" type="flowers"/>
-		<overlay x="35" y="3" area="o" type="2"/>
-		<overlay x="2" y="11" area="o" type="3"/>
-		<overlay x="36" y="15" area="o" type="3"/>
-		<overlay x="45" y="2" area="i" type="4"/>
+		<overlay x="35" y="3" area="o" type="2" rotate="0"/>
+		<overlay x="2" y="11" area="o" type="3" rotate="0"/>
+		<overlay x="36" y="15" area="o" type="3" rotate="0"/>
+		<overlay x="45" y="2" area="i" type="4" rotate="0"/>
 		<walkable x="45" y="2" force="1"/>
+		
+		<overlay x="16" y="3" area="i" type="4" rotate="0"/>
+		<walkable x="16" y="3" force="1"/>
+		<conv x="15" y="3" face="5">You: oh, hello!
+Bun:Hi. welcome to the tutorial level!
+You: oohh...
+Bun: if you see me, talk to me!
+Bun: I might have useful advice!</conv>
 		<teleport x="46" y="3" destx="48" desty="2" />
-		<trig x="48" y="2" text="woah.."/>
+		<trig x="48" y="2" face="4" text="woah.."/>
 		<teleport x="22" y="17" destx="46" desty="15" />
-		<trig x="46" y="15" text="Wha? Here again?"/>
-		<overlay x="50" y="21" area="o" type="2"/>
-		<conv x="50" y="20">Bun: congrads.
+		<trig x="46" y="15" face="4" text="Wha? Here again?"/>
+		<overlay x="50" y="21" area="o" type="2" rotate="0"/>
+		<conv x="50" y="20" face="4">Bun: congrads.
 Bun: You found a secret!</conv>
 		<teleport x="46" y="23" destx="17" desty="19" />
 		<trig x="17" y="19" text="This is one strange place."/>
 		<teleport x="51" y="3" destx="45" desty="5" />
-		<trig x="45" y="5" text="Creepy..."/>
+		<trig x="45" y="5" face="4" text="Creepy..."/>
 		<conv x="44" y="2">You: I found the door!
 Bun: I can see this.
 Continue on your journey. 
@@ -96,6 +104,12 @@ You: but where do i go now?
 Bun: The tiled floor section behind me.
 You: what about it?
 Bun: Walk on it!</conv>
+		<overlay x="34" y="6" area="i" type="4"  rotate="2"/>
+		<walkable x="34" y="6" force="1"/>
+		<conv x="35" y="6">Bun: You found a secret.
+Bun: mazes can contain secret areas.
+You: cool!
+Bun: Keep an eye open!</conv>
 		
 
 		

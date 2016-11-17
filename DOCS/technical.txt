@@ -3,3 +3,9 @@ Text Maze 5 technical Documentation.
 Text maze format 2 documentation can be found in the  comments of the
 included "sample.xml" 
 and in "text-maze-format-2.txt"
+
+Shadow casting:
+The engine features automatic shadow casting.
+walls assumed to be above ground hight, as well as ALL interior tiles,
+cast shadows on other exterior tiles.
+the player also has a "fuzzy circle" shadow.

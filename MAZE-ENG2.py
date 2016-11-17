@@ -66,11 +66,20 @@ pygame.display.set_caption("Text-maze 5", "Text-maze 5")
 
 #load tiles
 gamebg=pygame.image.load(os.path.join('TILE', 'game-bg.png'))
-tilewall=pygame.image.load(os.path.join('TILE', 'wall.png'))
+
+#player overlay
 tileplayer=pygame.image.load(os.path.join('TILE', 'player.png'))
 tileplayerB=pygame.image.load(os.path.join('TILE', 'playerB.png'))
 tileplayerL=pygame.image.load(os.path.join('TILE', 'playerL.png'))
 tileplayerR=pygame.image.load(os.path.join('TILE', 'playerR.png'))
+#shadowwall variants:
+shadtileplayer=pygame.image.load(os.path.join('TILE', 'shadplayer.png'))
+shadtileplayerB=pygame.image.load(os.path.join('TILE', 'shadplayerB.png'))
+shadtileplayerL=pygame.image.load(os.path.join('TILE', 'shadplayerL.png'))
+shadtileplayerR=pygame.image.load(os.path.join('TILE', 'shadplayerR.png'))
+
+tilewall=pygame.image.load(os.path.join('TILE', 'wall.png'))
+
 tilefloor=pygame.image.load(os.path.join('TILE', 'floor.png'))
 tileexit=pygame.image.load(os.path.join('TILE', 'exit.png'))
 tilewater=pygame.image.load(os.path.join('TILE', 'water.png'))
@@ -91,7 +100,15 @@ ovbunraft=pygame.image.load(os.path.join('TILE', 'ovbunraft.png'))
 ovbunstand=pygame.image.load(os.path.join('TILE', 'ovbunstand.png'))
 ovsink=pygame.image.load(os.path.join('TILE', 'ovsink.png'))
 ovtoilet=pygame.image.load(os.path.join('TILE', 'ovtoilet.png'))
-
+#special shadows
+wallshadow=pygame.image.load(os.path.join('TILE', 'wallshadow.png'))
+playerfuzzshad=pygame.image.load(os.path.join('TILE', 'playerfuzzshad.png'))
+#hudfaces
+hudfacehappy=pygame.image.load(os.path.join('TILE', 'hudfacehappy.png'))
+hudfacesad=pygame.image.load(os.path.join('TILE', 'hudfacesad.png'))
+hudfaceshock=pygame.image.load(os.path.join('TILE', 'hudfaceshock.png'))
+hudfaceangry=pygame.image.load(os.path.join('TILE', 'hudfaceanger.png'))
+hudfacecasual=pygame.image.load(os.path.join('TILE', 'hudfacecasual.png'))
 
 winscreen=pygame.image.load(os.path.join('TILE', 'winscreen.png'))
 
@@ -112,49 +129,56 @@ CANTMOVE = ("Can't move in that direction.")
 WINGAME = ("You win!")
 lastmove="F"
 inside=0
-#draws tiles. used by tilegriddraw internally.
 
-def tileblit(xval, yval, tilestring, xfoo, yfoo):
+#define a simple font from the system font
+simplefont = pygame.font.SysFont(None, 16)
+simplefontB = pygame.font.SysFont(None, 24)
+
+#draws tiles. used by tilegriddraw internally.
+bgtext = simplefont.render(mazetitle, True, (5, 59, 186))
+gamebg.blit(bgtext, (0, 0))
+hudface="1"
+def tileblit(xval, yval, tilestring, xfoo, yfoo, drawfox=0):
 	if tilestring=="1":
 		screensurf.blit(tilewall, (xval, yval))
-		overlayscanB(xfoo, yfoo, xval, yval)
+		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
 		if inside==1:
 			screensurf.blit(tileoutside, (xval, yval))
 	if tilestring=="0":
 		screensurf.blit(tilefloor, (xval, yval))
-		overlayscanB(xfoo, yfoo, xval, yval)
+		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
 		if inside==1:
 			screensurf.blit(tileoutside, (xval, yval))
 	if tilestring=="3":
 		screensurf.blit(tileexit, (xval, yval))
-		overlayscanB(xfoo, yfoo, xval, yval)
+		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
 		if inside==1:
 			screensurf.blit(tileoutside, (xval, yval))
 	if tilestring=="w":
 		screensurf.blit(tilewater, (xval, yval))
-		overlayscanB(xfoo, yfoo, xval, yval)
+		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
 		if inside==1:
 			screensurf.blit(tileoutside, (xval, yval))
 	if tilestring=="g":
 		screensurf.blit(tilegrass, (xval, yval))
-		overlayscanB(xfoo, yfoo, xval, yval)
+		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
 		#print "ping"
 		if inside==1:
 			screensurf.blit(tileoutside, (xval, yval))
 			#print "pong"
 	if tilestring=="d":
 		screensurf.blit(tiledock, (xval, yval))
-		overlayscanB(xfoo, yfoo, xval, yval)
+		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
 		if inside==1:
 			screensurf.blit(tileoutside, (xval, yval))
 	if tilestring=="B":
 		screensurf.blit(tilebrickpath, (xval, yval))
-		overlayscanB(xfoo, yfoo, xval, yval)
+		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
 		if inside==1:
 			screensurf.blit(tileoutside, (xval, yval))
 	if tilestring=="b":
 		screensurf.blit(tilebridge, (xval, yval))
-		overlayscanB(xfoo, yfoo, xval, yval)
+		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
 		if inside==1:
 			screensurf.blit(tileoutside, (xval, yval))
 	#"inside" tiles below.
@@ -164,28 +188,28 @@ def tileblit(xval, yval, tilestring, xfoo, yfoo):
 			screensurf.blit(tileinsidewall, (xval, yval))
 		else:
 			screensurf.blit(tileroof1, (xval, yval))
-		overlayscanB(xfoo, yfoo, xval, yval)
+		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
 	if tilestring=="c":
 		
 		if inside==1:
 			screensurf.blit(tilecarpet, (xval, yval))
 		else:
 			screensurf.blit(tileroof1, (xval, yval))
-		overlayscanB(xfoo, yfoo, xval, yval)
+		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
 	if tilestring=="r":
 		
 		if inside==1:
 			screensurf.blit(tileredcarpet, (xval, yval))
 		else:
 			screensurf.blit(tileroof1, (xval, yval))
-		overlayscanB(xfoo, yfoo, xval, yval)
+		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
 	if tilestring=="t":
 		
 		if inside==1:
 			screensurf.blit(tiletiledfloor, (xval, yval))
 		else:
 			screensurf.blit(tileroof1, (xval, yval))
-		overlayscanB(xfoo, yfoo, xval, yval)
+		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
 		
 #new function to draw tile grid
 def tilegriddraw2():
@@ -221,7 +245,7 @@ def tilegriddraw2():
 	tileblit(160, 100, FORWARD, xfoo, yfoo)
 	xfoo=CENTERx
 	yfoo=CENTERy
-	tileblit(160, 180, CENTER, xfoo, yfoo)
+	tileblit(160, 180, CENTER, xfoo, yfoo, 1)
 	xfoo=LEFTWARDx
 	yfoo=LEFTWARDy
 	tileblit(80, 180, LEFTWARD, xfoo, yfoo)
@@ -250,14 +274,49 @@ def tilegriddraw2():
 	yfoo=BACKWARDy
 	tileblit(160, 260, BACKWARD, xfoo, yfoo)
 	labelscan()
-	if lastmove=="F":
-		screensurf.blit(tileplayer, (160, 180))
-	if lastmove=="B":
-		screensurf.blit(tileplayerB, (160, 180))
-	if lastmove=="L":
-		screensurf.blit(tileplayerL, (160, 180))
-	if lastmove=="R":
-		screensurf.blit(tileplayerR, (160, 180))
+	screensurf.blit(playerfuzzshad, (160, 180))
+	if inside==1:
+		if lastmove=="F":
+			screensurf.blit(tileplayer, (160, 180))
+		if lastmove=="B":
+			screensurf.blit(tileplayerB, (160, 180))
+		if lastmove=="L":
+			screensurf.blit(tileplayerL, (160, 180))
+		if lastmove=="R":
+			screensurf.blit(tileplayerR, (160, 180))
+	if inside==0:
+		yshad=(playy + 1)
+		shadblk=lookpoint(playx, yshad)
+		curblk=lookpoint(playx, playy)
+		if shadblk=="1" or shadblk=="R" or shadblk=="r"  or shadblk=="c"   or shadblk=="t":
+			if curblk!="1" and curblk!="R" and curblk!="c" and curblk!="t" and curblk!="r":
+				if lastmove=="F":
+					screensurf.blit(shadtileplayer, (160, 180))
+				if lastmove=="B":
+					screensurf.blit(shadtileplayerB, (160, 180))
+				if lastmove=="L":
+					screensurf.blit(shadtileplayerL, (160, 180))
+				if lastmove=="R":
+					screensurf.blit(shadtileplayerR, (160, 180))
+			else:
+				if lastmove=="F":
+					screensurf.blit(tileplayer, (160, 180))
+				if lastmove=="B":
+					screensurf.blit(tileplayerB, (160, 180))
+				if lastmove=="L":
+					screensurf.blit(tileplayerL, (160, 180))
+				if lastmove=="R":
+					screensurf.blit(tileplayerR, (160, 180))
+		else:
+			if lastmove=="F":
+				screensurf.blit(tileplayer, (160, 180))
+			if lastmove=="B":
+				screensurf.blit(tileplayerB, (160, 180))
+			if lastmove=="L":
+				screensurf.blit(tileplayerL, (160, 180))
+			if lastmove=="R":
+				screensurf.blit(tileplayerR, (160, 180))
+		
 
 def overlayblit(overlaytype):
 	if overlaytype=="flowers":
@@ -330,7 +389,7 @@ def overlayscan():
 			if QX==BACKWARDx and QY==BACKWARDy:
 				screensurf.blit(labtext, (160, 260))
 	
-def overlayscanB(xval, yval, xco, yco):
+def overlayscanB(xval, yval, xco, yco, drawfox=0):
 	for node in nodetag.findall("overlay"):
 		xval=int(xval)
 		yval=int(yval)
@@ -338,6 +397,7 @@ def overlayscanB(xval, yval, xco, yco):
 		QY=int(node.attrib.get('y'))
 		Qtype=node.attrib.get('type')
 		Qvis=node.attrib.get('area')
+		Qrotate=node.attrib.get('rotate', "0")
 		if Qvis=="i" and inside==1:
 			ovvis=1
 		elif Qvis=="o" and inside==0:
@@ -349,8 +409,23 @@ def overlayscanB(xval, yval, xco, yco):
 		labtext=overlayblit(Qtype)
 		if ovvis==1:
 			if QX==xval and QY==yval:
-				
+				if Qrotate=="1":
+					labtext=pygame.transform.rotate(labtext, 90)
+				if Qrotate=="2":
+					labtext=pygame.transform.rotate(labtext, 180)
+				if Qrotate=="3":
+					labtext=pygame.transform.rotate(labtext, 270)
 				screensurf.blit(labtext, (xco, yco))
+				
+	yshad=(yval + 1)
+	shadblk=lookpoint(xval, yshad)
+	curblk=lookpoint(xval, yval)
+	if 0==0:
+		if shadblk=="1" or shadblk=="R" or shadblk=="r"  or shadblk=="c"   or shadblk=="t":
+			if curblk!="1" and curblk!="R" and curblk!="c" and curblk!="t" and curblk!="r":
+				screensurf.blit(wallshadow, (xco, yco))
+			
+	
 	
 	
 def labelscan():
@@ -498,9 +573,6 @@ def lookpointB(lookptx, lookpty):
 	return (lookuppointis)
 	
 
-#define a simple font from the system font
-simplefont = pygame.font.SysFont(None, 16)
-simplefontB = pygame.font.SysFont(None, 24)
 
 #function that draws text at the bottom of the display
 def drawfoottext(textto, linemode):
@@ -531,6 +603,8 @@ def keyread():
 			if event.type == KEYDOWN and event.key == K_d:
 				return(RIGHTWODBIND)
 			if event.type == KEYDOWN and event.key == K_q:
+				return(QUITWORDBIND)
+			if event.type == QUIT:
 				return(QUITWORDBIND)
 			if event.type == KEYDOWN and event.key == K_UP:
 				return(FORWARDWORDBIND)
@@ -575,6 +649,8 @@ def convdup(convtext):
 #print (lookpoint(2, 2))
 cantmoveflg=0
 #main loop
+hudfacedef="1"
+points=0
 while gameend==('0'):
 	#POV coordinate determination
 	#stage0
@@ -712,7 +788,21 @@ while gameend==('0'):
 		popuptext(looktext)
 		showlooktext=0
 		mipfx.play()
-	drawheadertext(("Text-Maze 5 | " + mazetitle), 0)
+	if hudface=="1":
+		hudfacesel=hudfacecasual
+	elif hudface=="2":
+		hudfacesel=hudfacesad
+	elif hudface=="3":
+		hudfacesel=hudfaceangry
+	elif hudface=="4":
+		hudfacesel=hudfaceshock
+	elif hudface=="5":
+		hudfacesel=hudfacehappy
+	#hudfacesel=pygame.transform.scale(hudfacesel, (30, 30))
+	screensurf.blit(hudfacesel, (54, 340))
+	hudface=hudfacedef
+		
+	#drawheadertext(("Text-Maze 5 | " + mazetitle), 0)
 	#print(libtextmaze.mazedraw3(FORWARD, BACKWARD, LEFTWARD, RIGHTWARD, FORWARD2, LEFTWARD2, RIGHTWARD2, FORWARD3, LEFTWARD3, RIGHTWARD3))
 	pygame.display.update()
 	pygame.event.pump()
@@ -785,17 +875,32 @@ while gameend==('0'):
 		if int(node.attrib.get('x'))==playx and int(node.attrib.get('y'))==playy:
 			showlooktext=1
 			looktext=node.attrib.get('text')
+			hudface=node.attrib.get('face', "1")
 			break
 	if usrentry=="l":
 		for node in nodetag.findall("look"):
 			if int(node.attrib.get('x'))==playx and int(node.attrib.get('y'))==playy:
 				showlooktext=1
 				looktext=node.attrib.get('text')
+				hudface=node.attrib.get('face', "1")
 				break
 	if usrentry=="t":
 		for node in nodetag.findall("conv"):
 			if int(node.attrib.get('x'))==playx and int(node.attrib.get('y'))==playy:
 				convtext=node.text
+				hudface=node.attrib.get('face', "1")
+				if hudface=="1":
+					hudfacesel=hudfacecasual
+				elif hudface=="2":
+					hudfacesel=hudfacesad
+				elif hudface=="3":
+					hudfacesel=hudfaceangry
+				elif hudface=="4":
+					hudfacesel=hudfaceshock
+				elif hudface=="5":
+					hudfacesel=hudfacehappy
+				screensurf.blit(hudfacesel, (54, 340))
+				hudface=hudfacedef
 				convdup(convtext)
 				break
 		
