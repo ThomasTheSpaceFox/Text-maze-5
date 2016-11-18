@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <main>
 	<setup>
-		<mazename>sample maze</mazename>
+		<mazename>Tutorial Level</mazename>
 		<startposx>2</startposx>
 		<startposy>2</startposy>
 		<subdir>sample</subdir>
@@ -37,10 +37,11 @@ You: Darn.
 You: Hey, why do I not have a raft?
 Bun: because.
 You: oh.</conv>
-		<conv x="35" y="2" face="5">
-Bun: Doors are not always labeled.
+		<conv x="35" y="2" face="5" keyid="2" offkey="2">Bun: Doors are not always labeled.
 You: So, that door could be anywhere... &lt;.&lt;
 Bun: quite!</conv>
+		<conv x="35" y="2" face="5" onkey="2">Bun: Keep looking...</conv>
+		<gate x="36" y="2" keyid="2"/>
 		<conv x="35" y="15" face="4">You: How do you get around so fast?
 Bun: Thats classified.</conv>
 		<trig x="4" y="3" text="wow." />
@@ -80,11 +81,20 @@ Bun: Thats classified.</conv>
 		
 		<overlay x="16" y="3" area="i" type="4" rotate="0"/>
 		<walkable x="16" y="3" force="1"/>
-		<conv x="15" y="3" face="5">You: oh, hello!
+		<gate x="15" y="4" keyid="1"/>
+		<conv x="15" y="3" face="5" keyid="1" offkey="1">You: oh, hello!
 Bun:Hi. welcome to the tutorial level!
 You: oohh...
 Bun: if you see me, talk to me!
-Bun: I might have useful advice!</conv>
+Bun: I might have useful advice!
+Bun: for starters...
+Bun: that dark box is a gate.
+Bun: you will need the right key to open it.
+You: Mkay...
+Bun: here. this key will open it!
+*you got a key*
+You: Thanks!</conv>
+		<conv x="15" y="3" face="5" onkey="1">Bun: come on! get going!</conv>
 		<teleport x="46" y="3" destx="48" desty="2" />
 		<trig x="48" y="2" face="4" text="woah.."/>
 		<teleport x="22" y="17" destx="46" desty="15" />
@@ -96,7 +106,7 @@ Bun: You found a secret!</conv>
 		<trig x="17" y="19" text="This is one strange place."/>
 		<teleport x="51" y="3" destx="45" desty="5" />
 		<trig x="45" y="5" face="4" text="Creepy..."/>
-		<conv x="44" y="2">You: I found the door!
+		<conv x="44" y="2" keyid="3" offkey="3">You: I found the door!
 Bun: I can see this.
 Continue on your journey. 
 You have much to see.
@@ -104,6 +114,9 @@ You: but where do i go now?
 Bun: The tiled floor section behind me.
 You: what about it?
 Bun: Walk on it!</conv>
+		<conv x="44" y="2" onkey="3">You: Get a move on!
+You: Ok! OK!!. o.o</conv>
+		<gate x="46" y="3" keyid="3"/>
 		<overlay x="34" y="6" area="i" type="4"  rotate="2"/>
 		<walkable x="34" y="6" force="1"/>
 		<conv x="35" y="6">Bun: You found a secret.

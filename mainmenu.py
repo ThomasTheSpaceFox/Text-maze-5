@@ -49,13 +49,14 @@ titlescreenbox = titlescreen.get_rect()
 titlescreenbox.centerx = screensurf.get_rect().centerx
 titlescreenbox.centery = ((screensurf.get_rect().centery) - 90)
 screensurf.blit(titlebg, (0, 0))
-#screensurf.blit(titlescreen, titlescreenbox)
+screensurf.blit(titlescreen, (0, 20))
 
 
 
 pygame.display.set_caption("Text-maze 5 menu", "Text-maze 5")
 menuhighnum=1  #integer used to track the highlighted menu item. 
 menusel="null"
+simplefontB = pygame.font.SysFont(None, 22)
 simplefont = pygame.font.SysFont(None, 16) #define a simple font from the system fonts
 ixreturn=0
 while menusel!="quit":
@@ -66,6 +67,7 @@ while menusel!="quit":
 		screensurf.fill((100, 120, 100))
 		screensurf.blit(titlebg, (0, 0))
 		#screensurf.blit(titlescreen, titlescreenbox)
+		screensurf.blit(titlescreen, (0, 20))
 		ixreturn=0
 	menucnt=1
 	evhappenflg=0
@@ -75,7 +77,7 @@ while menusel!="quit":
 	elif menuhighnum>findcnt:
 		menuhighnum=1
 	#starting point for menu
-	texhigcnt=240
+	texhigcnt=54
 	#separation between each line of text's origin
 	texhigjump=14
 	#menu line count variable. should be set to 1 here.
@@ -83,10 +85,11 @@ while menusel!="quit":
 	#draws the menu. inverting the colors of the selected menu item.
 	for indx in mainlist:
 		if indlcnt==menuhighnum:
-			textit=simplefont.render(indx, True, (0, 0, 0), (255, 255, 255))
+			textit=simplefontB.render(indx, True, (0, 0, 0), (255, 255, 255))
 		else:
-			textit=simplefont.render(indx, True, (255, 255, 255), (0, 0, 0))
-		screensurf.blit(textit, (0, texhigcnt))
+			textit=simplefontB.render(indx, True, (5, 59, 186), (163, 169, 195))
+		screensurf.blit(textit, (texhigcnt, 349))
+		texhigcnt +=(textit.get_width())
 		texhigcnt += texhigjump
 		indlcnt += 1
 	pygame.display.update()
@@ -100,17 +103,27 @@ while menusel!="quit":
 			if event.type == KEYDOWN and event.key == K_UP:
 				menuhighnum -= 1
 				evhappenflg=1
+			if event.type == KEYDOWN and event.key == K_RIGHT:
+				menuhighnum += 1
+				evhappenflg=1
 			if event.type == KEYDOWN and event.key == K_DOWN:
 				menuhighnum += 1
+				evhappenflg=1
+			if event.type == KEYDOWN and event.key == K_LEFT:
+				menuhighnum -= 1
 				evhappenflg=1
 			if event.type == KEYDOWN and event.key == K_RETURN:
 				ixreturn=1
 				evhappenflg=1
 				break
+			if event.type == QUIT:
+				menusel="quit"
+				evhappenflg=1
+				break
 	#second menu line count variable. should be set to 1 here.
 	indlcnt2=1
 	#executes option in menu when ixreturn is 1, (this means player has pressed return.)
-	if ixreturn==1:
+	if ixreturn==1 and menusel!="quit":
 		#print "blk1"
 		for indxB in mainlist:
 			#print indxB

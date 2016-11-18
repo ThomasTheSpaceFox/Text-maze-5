@@ -1,5 +1,22 @@
 TEXT MAZE FORMAT 2 TECHNICAL DOCUMENTATION
+------
+KEYIDs:
+a string containing only a zero "0" is NOT A VALID KEYID AND WONT BE HONORED!!!
+THAT ID IS USED AS A NULL DEFAULT.
 
+KEYIDs are the basis for Text-maze format 2's scripted events.
+all nodes have optional "onkey" and "offkey" attributes.(each specifying a keyid.)
+-if onkey is specified. the player must have obtaned that keyID!
+-if offkey is specified. the player must *NOT* obtaned that keyID!
+-if neither are specified. that node will be honored regardless.
+-if BOTH onkey and offkey are specified, The player must have the keyid specified in onkey, and must NOT have the keyid specified in offkey.
+Gates: gates are an exception. specify "keyid" as teh key needed to open the gate.
+(gates open automatically upon obtaining a keyid)
+Trig, Look, and Conv events:
+these events can specify "keyid" as a key to give the player.
+
+see the included sample mazes for some real code.
+------
 NODES. nodes are different from tiles. this is used for triggered events such as trig and look.
 	all nodes have x and y attributes.
 	TYPES:
@@ -27,8 +44,10 @@ NODES. nodes are different from tiles. this is used for triggered events such as
 	conv: when the player presses "t" at point "x" "y", spawn the conversation
 		in the text span of the conv tag.
 		each line is iterated, 1 at a time. see the included maze xml files for examples. 
+	gate: a quick keyid driven gate.
+		This is provided to be a quick gate. (faster than specifying on and off overlays, and a walkable, but not as flexable.)
 
-
+-----
 valid tiles:
 "1" hedge (wall) (outside)
 "0" concrete path (floor) (outside)
@@ -36,13 +55,14 @@ valid tiles:
 "3" exit tile (floor) (both/special) each maze should have 1 of these at the "end"
 "w" water (wall) (outside)
 "g" grass (floor) (outside)
+"s" sand (floor) (outside)
 "b" bridge (floor) (outside)
 "d" dock (floor) (outside)
 "R" building wall (wall) (technically outside. (player would seem to bw on a roof if spawned on one.)
 "r" red carpet (floor) (inside)
 "c" blue carpet (floor) (inside)
 "t" tile floor (floor) (inside)
-
+-----
 valid overlay types:
 "2" bunny npc laying on beach towel
 "3" bunny npc laying on raft
@@ -50,12 +70,14 @@ valid overlay types:
 "flowers" some assorted flowers on the ground
 "sink" a sink
 "toilet" a toilet
-
+"crate" a wooden shipping crate
+-----
 hudface ("face") attribute:
-the look and trig nodes have an optional "face" attribute.
+the look, trig, and conv, nodes have an optional "face" attribute.
 it can be used to change the "hud face" for that event.
 1=casual (default)
 2=sad
 3=angry
 4=shock
 5=happy
+-----

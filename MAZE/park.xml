@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<main>
+	<setup>
+		<mazename>The park</mazename>
+		<startposx>3</startposx>
+		<startposy>2</startposy>
+		<subdir>park</subdir>
+	</setup>
+	<maingrid>park.main.grid</maingrid>
+	<nodes>
+		<overlay x="3" y="3" area="b" type="4"  rotate="3"/>
+		<walkable x="3" y="3" force="1"/>
+		<conv x="3" y="2" keyid="1" offkey="1">Bun: This park is a doosy...
+Bun: and a creepy one at that.
+You: great...
+Bun: There are rumors of teleportation...
+Bun: and locked gates...
+Bun: Take this key:
+*You got a key!*
+You: thanks!
+Bun: im here to help!</conv>
+		<conv x="3" y="2" onkey="2">Bun: Go get em!</conv>
+		<conv x="3" y="2" onkey="1" offkey="2" >Bun: You will have to find the other key.
+It is around here someplace...</conv>
+		<overlay x="26" y="25" area="b" type="3"  rotate="0"/>
+		<conv x="26" y="24">Bun: Hi!
+You: Hello.
+You: Hey, why do i do all the walking?
+Bun: Because i do all the hopping!</conv>
+	<teleport x="8" y="16" destx="3" desty="23" />
+	<teleport x="3" y="23" destx="8" desty="16" />
+	<trig x="22" y="31" face="5" text="*sniff* ahh, smell that sea air!" />
+	<gate x="6" y="4" keyid="1"/>
+	<trig x="6" y="5" keyid="2" offkey="2" text="Ooh another key! cool!" face="5"/>
+	<gate x="6" y="6" keyid="2"/>
+	<gate x="14" y="39" keyid="bigbeachkey"/>
+	<trig x="14" y="38" offkey="bigbeachkey" text="Gate to big beach." face="3"/>
+	<trig x="7" y="52" keyid="bigbeachkey" offkey="bigbeachkey" text="hmm... Big Beach Key..." face="5"/>
+	<teleport x="18" y="38" destx="2" desty="39"/>
+	<teleport x="8" y="53" destx="15" desty="38"/>
+	
+	<overlay x="29" y="50" area="b" type="crate"  rotate="0"/>
+	<walkable x="29" y="50" force="1"/>
+	<look x="29" y="49" offkey="bigbeach1" keyid="bigbeach1" text="Hey, thats one of the keys."/>
+	<gate x="35" y="47" area="i" keyid="bigbeach1"/>
+	
+	<overlay x="43" y="53" area="b" type="crate"  rotate="0"/>
+	<walkable x="43" y="53" force="1"/>
+	<look x="42" y="53" offkey="bigbeach2" keyid="bigbeach2" text="Two keys down, one to go."/>
+	<gate x="34" y="44" area="i" keyid="bigbeach2"/>
+	
+	<overlay x="44" y="40" area="b" type="crate"  rotate="0"/>
+	<walkable x="44" y="40" force="1"/>
+	<look x="43" y="40" offkey="bigbeach3" keyid="bigbeach3" text="Thats the last key!"/>
+	<gate x="36" y="45" area="i" keyid="bigbeach3"/>
+	<overlay x="20" y="42" area="b" type="2"  rotate="0"/>
+	<walkable x="20" y="42" force="1"/>
+	<conv x="20" y="41" offkey="beachtalk" keyid="beachtalk" >Bun: offshore is a small building.
+Bun: inside are 3 gates. 
+Bun: to finish the level...
+Bun: you will need to find each key in order.
+You: got it!</conv>
+	<gate x="22" y="42" keyid="beachtalk"/>
+	</nodes>
+</main>

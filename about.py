@@ -27,7 +27,10 @@ pixjmp=14
 
 for fnx in abt:
 	fnx=fnx.replace('\n', '')
-	abttext=simplefont.render(fnx, True, (255, 255, 255), (0, 0, 0))
+	abttext=simplefont.render(fnx, True, (0, 0, 0))
+	abttextB=simplefont.render(fnx, True, (0, 0, 0), (255, 255, 255))
+	abttextB.set_alpha(150)
+	screensurf.blit(abttextB, (0, pixcnt1))
 	screensurf.blit(abttext, (0, pixcnt1))
 	pixcnt1 += pixjmp
 pygame.display.update()

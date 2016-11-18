@@ -3,30 +3,6 @@
 	<!--Keep categories at a max of 22, and category items at a max of 22-->
 	<cat label="sample levels">
 		<item label="Tutorial">sample.xml</item>
-	</cat>
-	<cat label="THIS IS A TEST">
-		<item label="1Tutorial">sample.xml</item>
-		<item label="2Tutorial">sample.xml</item>
-		<item label="3Tutorial">sample.xml</item>
-		<item label="4Tutorial">sample.xml</item>
-		<item label="5Tutorial">sample.xml</item>
-		<item label="6Tutorial">sample.xml</item>
-		<item label="7Tutorial">sample.xml</item>
-		<item label="8Tutorial">sample.xml</item>
-		<item label="9Tutorial">sample.xml</item>
-		<item label="10Tutorial">sample.xml</item>
-		<item label="11Tutorial">sample.xml</item>
-		<item label="12Tutorial">sample.xml</item>
-		<item label="13Tutorial">sample.xml</item>
-		<item label="14Tutorial">sample.xml</item>
-		<item label="15Tutorial">sample.xml</item>
-		<item label="16Tutorial1">sample.xml</item>
-		<item label="17Tutorial2">sample.xml</item>
-		<item label="18Tutorial3">sample.xml</item>
-		<item label="19Tutorial4">sample.xml</item>
-		<item label="20Tutorial5">sample.xml</item>
-		<item label="21Tutorial6">sample.xml</item>
-		<item label="22Tutorial7">sample.xml</item>
-		
+		<item label="The Park">park.xml</item>
 	</cat>
 </main>
