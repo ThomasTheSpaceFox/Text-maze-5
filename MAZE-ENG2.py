@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
-# Text-maze 4
+# Text-maze 5
 #mazemodpath = (os.path.join('MAZE', 'sample.MOD.txt'))
 
 
 
-#>>cosmetic only<<
+
 ##############
 #wordbindings:
 ##############
@@ -116,6 +116,7 @@ ovbunraft=pygame.image.load(os.path.join('TILE', 'ovbunraft.png'))
 ovbunstand=pygame.image.load(os.path.join('TILE', 'ovbunstand.png'))
 ovsink=pygame.image.load(os.path.join('TILE', 'ovsink.png'))
 ovtoilet=pygame.image.load(os.path.join('TILE', 'ovtoilet.png'))
+ovcat1=pygame.image.load(os.path.join('TILE', 'cat1.png'))
 #special shadows
 wallshadow=pygame.image.load(os.path.join('TILE', 'wallshadow.png'))
 playerfuzzshad=pygame.image.load(os.path.join('TILE', 'playerfuzzshad.png'))
@@ -360,6 +361,8 @@ def overlayblit(overlaytype):
 		return(ovtoilet)
 	if overlaytype=="crate":
 		return(ovcrate)
+	if overlaytype=="cat1":
+		return(ovcat1)
 
 def overlayscan():
 	for node in nodetag.findall("overlay"):
@@ -730,6 +733,8 @@ cantmoveflg=0
 hudfacedef="1"
 points=0
 keylist=["null"]
+skiploop=1
+loopskipstop=0
 while gameend==('0'):
 	#POV coordinate determination
 	#stage0
@@ -885,17 +890,47 @@ while gameend==('0'):
 	#print(libtextmaze.mazedraw3(FORWARD, BACKWARD, LEFTWARD, RIGHTWARD, FORWARD2, LEFTWARD2, RIGHTWARD2, FORWARD3, LEFTWARD3, RIGHTWARD3))
 	pygame.display.update()
 	pygame.event.pump()
+	#this should be here! it needs to happen after teh screen update, and before the userentry stuff!
+	for node in nodetag.findall("trigconv"):
+		if int(node.attrib.get('x'))==playx and int(node.attrib.get('y'))==playy:
+			convtext=node.text
+			hudface=node.attrib.get('face', "1")
+			keyid=node.attrib.get('keyid', "0")
+			onkey=node.attrib.get('onkey', "0")
+			offkey=node.attrib.get('offkey', "0")
+			if ((onkey=="0" and offkey=="0") or (onkey=="0" and offkey not in keylist) or (onkey in keylist and offkey=="0") or (onkey in keylist and offkey not in keylist)):
+				debugmsg("conv node:", 1)
+				if hudface=="1":
+					hudfacesel=hudfacecasual
+				elif hudface=="2":
+					hudfacesel=hudfacesad
+				elif hudface=="3":
+					hudfacesel=hudfaceangry
+				elif hudface=="4":
+					hudfacesel=hudfaceshock
+				elif hudface=="5":
+					hudfacesel=hudfacehappy
+				if not keyid in keylist:
+					keylist.extend([keyid])
+				screensurf.blit(hudfacesel, (54, 340))
+				hudface=hudfacedef
+				convdup(convtext)
+				break
+		
 	
 	usrentry = ('null')
 	#user prompt loop
 	pygame.event.clear()
-	while (usrentry!=FORWARDWORDBIND and usrentry!=BACKWARDWORDBIND and usrentry!=LEFTWORDBIND and usrentry!=RIGHTWODBIND and usrentry!=QUITWORDBIND and usrentry!="l" and usrentry!="t" and usrentry!="debugF" and usrentry!="debugB" and usrentry!="debugL" and usrentry!="debugR"):
-		#drawfoottext(("forward:" + FORWARDWORDBIND + " | backward:" + BACKWARDWORDBIND + " | look around: l | talk: t"), 0)
-		#drawfoottext(("left:" + LEFTWORDBIND + " | right:" + RIGHTWODBIND + " | quit:" + QUITWORDBIND), 1)
-		pygame.display.update()
-		usrentry=keyread()
+	if skiploop==0:
+		while (usrentry!=FORWARDWORDBIND and usrentry!=BACKWARDWORDBIND and usrentry!=LEFTWORDBIND and usrentry!=RIGHTWODBIND and usrentry!=QUITWORDBIND and usrentry!="l" and usrentry!="t" and usrentry!="debugF" and usrentry!="debugB" and usrentry!="debugL" and usrentry!="debugR"):
+			#drawfoottext(("forward:" + FORWARDWORDBIND + " | backward:" + 	BACKWARDWORDBIND + " | look around: l | talk: t"), 0)
+			#drawfoottext(("left:" + LEFTWORDBIND + " | right:" + RIGHTWODBIND + " | quit:" + QUITWORDBIND), 1)
+			pygame.display.update()
+			usrentry=keyread()
+	else:
+		loopskipstop=1
 		
-		
+	
 	#print (chr(27) + "[2J" + chr(27) + "[H")
 	#wall detection logic
 	cantmoveflg=0
@@ -957,17 +992,7 @@ while gameend==('0'):
 		lastmove="R"
 	#misic user commands
 	#print ("player x:" + str(playx) + "player y:" + str(playy))
-	for node in nodetag.findall("teleport"):
-		if int(node.attrib.get('x'))==playx and int(node.attrib.get('y'))==playy:
-			onkey=node.attrib.get('onkey', "0")
-			offkey=node.attrib.get('offkey', "0")
-			if ((onkey=="0" and offkey=="0") or (onkey=="0" and offkey not in keylist) or (onkey in keylist and offkey=="0") or (onkey in keylist and offkey not in keylist)):
-				debugmsg("Teleport node:")
-				debugmsg("start pos:", 1)
-				playx=int(node.attrib.get('destx'))
-				playy=int(node.attrib.get('desty'))
-				debugmsg("end pos:", 1)
-				break
+	
 	for node in nodetag.findall("trig"):
 		if int(node.attrib.get('x'))==playx and int(node.attrib.get('y'))==playy:
 			keyid=node.attrib.get('keyid', "0")
@@ -1021,7 +1046,23 @@ while gameend==('0'):
 					hudface=hudfacedef
 					convdup(convtext)
 					break
-		
+	
+	if skiploop!=1:
+		for node in nodetag.findall("teleport"):
+			if int(node.attrib.get('x'))==playx and int(node.attrib.get('y'))==playy:
+				onkey=node.attrib.get('onkey', "0")
+				offkey=node.attrib.get('offkey', "0")
+				if ((onkey=="0" and offkey=="0") or (onkey=="0" and offkey not in keylist) or (onkey in keylist and offkey=="0") or (onkey in keylist and offkey not in keylist)):
+					debugmsg("Teleport node:")
+					debugmsg("start pos:", 1)
+					playx=int(node.attrib.get('destx'))
+					playy=int(node.attrib.get('desty'))
+					debugmsg("end pos:", 1)
+					skiploop=1
+					break
+	if loopskipstop==1:
+		skiploop=0
+		loopskipstop=0
 	if playx<1:
 		playx=1
 		debugmsg("ERROR: player x pos illegal value. correcting.")

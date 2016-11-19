@@ -71,6 +71,7 @@ valid overlay types:
 "sink" a sink
 "toilet" a toilet
 "crate" a wooden shipping crate
+"cat1" cat npc standing. (
 -----
 hudface ("face") attribute:
 the look, trig, and conv, nodes have an optional "face" attribute.

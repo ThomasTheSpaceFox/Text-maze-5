@@ -19,7 +19,7 @@ screensurf.blit(aboutbg, (0, 20))
 screensurf.blit(titlebg, (0, 0))
 
 
-pygame.display.set_caption("Text-maze 4 about", "Text-maze 4 about")
+pygame.display.set_caption("Text-maze 5 about", "Text-maze 5 about")
 simplefont = pygame.font.SysFont(None, 16)
 abt = open('live-about.txt')
 pixcnt1=20
