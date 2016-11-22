@@ -10,11 +10,15 @@ import xml.etree.ElementTree as ET
 #what i mean is the maze engine itself can be executed from another python program that
 #points it to a *.MAZE file using a global variable: "mazefilepath"
 #see maze-series.py's comments for more info on this.
-
+scrnx=400
+scrny=400
 #some variables used in the menu list.
 menitm1='Launcher'
 #menitm2='null'
 #menitm3='null'
+
+screensurfdex=pygame.display.set_mode((scrnx, scrny), RESIZABLE)
+screensurf=screensurfdex.copy()
 
 #set MENUFLG to 1. this will tell Text-maze-4.py to not try to play and start the music. 
 #(as when Text-maze-4.py is run from here the music is already playing)
@@ -42,7 +46,9 @@ pygame.display.init()
 pygame.font.init()
 
 #set up display
-screensurf=pygame.display.set_mode((400, 370))
+
+screensurfdex=pygame.display.set_mode((scrnx, scrny), RESIZABLE)
+screensurf=screensurfdex.copy()
 screensurf.fill((100, 120, 100))
 #prep and display titlescreen image
 titlescreenbox = titlescreen.get_rect()
@@ -92,6 +98,8 @@ while menusel!="quit":
 		texhigcnt +=(textit.get_width())
 		texhigcnt += texhigjump
 		indlcnt += 1
+	screensurfQ=pygame.transform.scale(screensurf, (scrnx, scrny))
+	screensurfdex.blit(screensurfQ, (0, 0))
 	pygame.display.update()
 	pygame.event.pump()
 	pygame.event.clear()
@@ -120,6 +128,18 @@ while menusel!="quit":
 				menusel="quit"
 				evhappenflg=1
 				break
+			if event.type == VIDEORESIZE:
+				sxh=event.h
+				if sxh<400:
+					sxh=400
+				sxratio=(sxh-400)
+				sxw=int(sxratio + 400)
+				screensurfdex=pygame.display.set_mode((sxw, sxh), RESIZABLE)
+				scrnx=sxw
+				scrny=sxh
+				screensurfQ=pygame.transform.scale(screensurf, (scrnx, scrny))
+				screensurfdex.blit(screensurfQ, (0, 0))
+				pygame.display.update()
 	#second menu line count variable. should be set to 1 here.
 	indlcnt2=1
 	#executes option in menu when ixreturn is 1, (this means player has pressed return.)

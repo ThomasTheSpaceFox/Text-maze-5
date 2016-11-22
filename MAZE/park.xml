@@ -7,6 +7,8 @@
 		<subdir>park</subdir>
 	</setup>
 	<maingrid>park.main.grid</maingrid>
+	<forks>
+	</forks>
 	<nodes>
 		<overlay x="3" y="3" area="b" type="4"  rotate="3"/>
 		<walkable x="3" y="3" force="1"/>
@@ -45,7 +47,8 @@ Bun: Because i do all the hopping!</conv>
 		<trig x="7" y="52" keyid="bigbeachkey" offkey="bigbeachkey" text="hmm... Big Beach Key..." face="5"/>
 		<teleport x="18" y="38" destx="2" desty="39"/>
 		<teleport x="8" y="53" destx="15" desty="38"/>
-		
+		<trigconv x="26" y="8" keyid="tryleavetimearea" offkey="tryleavetimearea">Bun: Going somewhere? :p
+You: Apparently not.</trigconv>
 		<overlay x="29" y="50" area="b" type="crate"  rotate="0"/>
 		<walkable x="29" y="50" force="1"/>
 		<look x="29" y="49" offkey="bigbeach1" keyid="bigbeach1" text="Hey, thats one of the keys."/>
@@ -96,7 +99,7 @@ You: err. amaze.</trigconv>
 		<trigconv x="38" y="8" keyid="notebook1" offkey="notebook1">You: ohh, a Fish!
 Dear Notebook, went back in time today.
 saw fish.</trigconv>
-		<overlay x="51" y="6" area="b" type="cat1"  rotate="0"/>
+		<overlay x="51" y="6" area="i" type="cat1"  rotate="0"/>
 		<walkable x="51" y="6" force="1"/>
 		<conv x="50" y="6" offkey="pasttalk" keyid="pasttalk">Cat: well, young fox...
 Cat: you look out of place!

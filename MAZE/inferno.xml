@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<main>
+	<!--note the optional defaulttile attribute-->
+	<setup defaulttile="l">
+		<mazename>inferno: The manditory firey lava level.</mazename>
+		<startposx>2</startposx>
+		<startposy>2</startposy>
+		<subdir>sample</subdir>
+		
+	</setup>
+	<forks>
+		<batchtrig keyid="PUZdoor">
+			<k if="0" keyid="PUZswitch1"/>
+			<k if="1" keyid="PUZswitch2"/>
+			<k if="1" keyid="PUZswitch3"/>
+		</batchtrig>
+		<batchset keyid="PUZreset" set="0">
+			<k keyid="PUZswitch1"/>
+			<k keyid="PUZswitch2"/>
+			<k keyid="PUZswitch3"/>
+		</batchset>
+	</forks>
+	<maingrid>inferno.main.grid</maingrid>
+	<nodes>
+		<switch x="6" y="1" keyid="PUZswitch1"/>
+		<switch x="6" y="2" keyid="PUZswitch2"/>
+		<switch x="6" y="4" keyid="PUZswitch3"/>
+		<label x="6" y="1" area="b" text="0"/>
+		<label x="6" y="2" area="b" text="1"/>
+		<label x="6" y="4" area="b" text="2"/>
+		<switch x="4" y="1" keyid="PUZreset"/>
+		<label x="4" y="1" area="b" text="reset"/>
+		<gate x="7" y="3" keyid="PUZdoor"/>
+		<!--Street and adress labels.-->
+		<label x="15" y="9" area="o" text="1 Small Plaza"/>
+		<label x="11" y="11" area="o" text="2 Small Plaza"/>
+		<label x="8" y="9" area="o" text="3 Small Plaza"/>
+		<overlay x="2" y="3" area="i" type="4"  rotate="3"/>
+		<walkable x="2" y="3" force="1"/>
+		<trigconv x="2" y="2" keyid="starttalk" offkey="starttalk">Bun: This place is a tad hot.
+You: your not kidding. ._.
+Bun: this is going to be a long day.
+Bun: the locals are bound to give us quests.
+You: there is always somthing.
+Bun: Yup. better get a move on.
+Bun: i here the Farmer needs help.
+Bun: he is usually in the back
+Bun: of the greenhouse.
+Bun: good luck solving the
+Bun: password puzzle outside. :)
+You: This trip just gets harder and harder. :(
+Bun: here is a hint: it has 1 zero. :)</trigconv>
+		<conv x="2" y="2" onkey="starttalk">You: what is that smell? D: its horrid!
+Bun: sulfur.
+You: oh, lava feilds, right.</conv>
+		<overlay x="18" y="9" area="i" type="cat2"  rotate="0" offkey="cert2"/>
+		<walkable x="18" y="9" force="1" offkey="cert2"/>
+		<trigconv x="17" y="9" keyid="rel" onkey="gardentalk" offkey="rel">Cat: can i help you?
+You: a flower delivery.
+Cat: huh, hard times kid?
+You: I am in need of work certificates.
+Cat: I can give you one.
+Cat: I need someone who isnt a cat.
+You: im a fox, so...
+Cat: I need you to get money from mr smith.
+Cat: He is a cat-ophobic mouse.
+Cat: also if you could give him this flower?
+You: oh? ok. :) where does he live?
+Cat: just next door.</trigconv>
+		<trigconv x="17" y="9" keyid="cert2" onkey="mousemoney" offkey="cert2">You: Here is the money.
+Cat: Thank you.
+Cat: say, what was his reaction to the flower?
+You: he seemed suprised.
+Cat: Do you think he will agree to..
+You: A date? its worth a try!
+Cat: You are right! im going to ask him
+Cat: for lunch at the diner!</trigconv>
+		<conv x="17" y="9" onkey="rel" offkey="mousemoney">Cat: get moving! what flower will wilt.</conv>
+		<overlay x="13" y="12" area="i" type="mouse1"  rotate="0" offkey="cert2"/>
+		<walkable x="13" y="12" force="1" offkey="cert2"/>
+		<conv x="12" y="12" offkey="rel" >Mr Smith: greetings.</conv>
+		<trigconv x="12" y="12" keyid="mousemoney" onkey="rel" offkey="mousemoney">Mr Smith: watch out! D:
+You: oh! sorry! you mr. smith?
+Mr Smith: Yes, is this about that money?
+You: yes. also she sends this flower.
+Mr. Smith: oh... she...
+You: *smirk*
+Mr. Smith: a-anyways, here is the money.
+You: thank you.</trigconv>
+		<gate x="9" y="12" keyid="cert2"/>
+		<gate x="8" y="9" keyid="cert2"/>
+		<gate x="9" y="11" keyid="cert1"/>
+		<gate x="5" y="4" keyid="gardentalk"/>
+		<overlay x="54" y="11" area="i" type="cat3"  rotate="0"/>
+		<walkable x="54" y="11" force="1"/>
+		<trigconv x="53" y="11" keyid="gardentalk" offkey="gardentalk">Farmer: so you need a work certificate eh?
+You: yes sir.
+Farmer: Then deliver this flower to 1 Small Plaza.
+this customer might have work for ya too.
+come back when this and whatever erands
+she gives ya are done.
+You: yes sir.</trigconv>
+		<trigconv x="53" y="11" keyid="cert1" onkey="cert2" offkey="cert1">Farmer: im a cat of my word.
+Here is your work certificate.
+You: thanks!</trigconv>
+		<!--diner-->
+		<overlay x="5" y="9" area="i" type="counter"  rotate="1"/>
+		<overlay x="5" y="10" area="i" type="sink"  rotate="1"/>
+		<overlay x="5" y="11" area="i" type="counter"  rotate="1"/>
+		<walkable x="5" y="9" force="1"/>
+		<walkable x="5" y="10" force="1"/>
+		<walkable x="5" y="11" force="1"/>
+		<overlay x="6" y="9" area="i" type="cat2"  rotate="0"/>
+		<walkable x="6" y="9" force="1"/>
+		<overlay x="5" y="9" area="i" type="mouse1"  rotate="2"/>
+		<trigconv x="6" y="10" keyid="mousecatchat" onkey="cert2" offkey="mousecatchat">Cat: We have so much in common!
+Mr. Smith: sorry for judging you.
+Cat: I forgive you!
+Cat: say fox, You might want to.
+head off to town. lots of work there.</trigconv>
+	</nodes>
+</main>

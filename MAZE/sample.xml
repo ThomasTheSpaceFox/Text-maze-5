@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <main>
-	<setup>
+	<!--note the optional defaulttile attribute-->
+	<setup defaulttile="z">
 		<mazename>Tutorial Level</mazename>
 		<startposx>2</startposx>
 		<startposy>2</startposy>
 		<subdir>sample</subdir>
 		
 	</setup>
+	<forks>
+	</forks>
 	<!--NODES. nodes are different from tiles. this is used for triggered events such as trig and look.
 	all nodes have x and y attributes.
 	TYPES:
@@ -45,6 +48,7 @@ Bun: quite!</conv>
 		<conv x="35" y="15" face="4">You: How do you get around so fast?
 Bun: Thats classified.</conv>
 		<trig x="4" y="3" text="wow." />
+		<trig x="62" y="4" face="4" text="woah... The Tutorial is sure high up." />
 		<trig x="6" y="3" text="Nice pad."/>
 		<trig x="23" y="7" face="5" text="What a sunny day!"/>
 		<trig x="18" y="22" face="2" text="Not again! D:"/>

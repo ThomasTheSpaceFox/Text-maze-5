@@ -9,10 +9,22 @@ import xml.etree.ElementTree as ET
 #this is the launcher program for Text Maze 5. 
 #it is intended to be executed by mainmenu.py, but can run by itself.
 #a max of 22 categories, with 22 levels per category can be displayed properly.
+if 'scrnx' in globals():
+	print ("Global variable: 'scrnx' present. following its setting.")
+else:
+	print ("Global variable: 'scrnx' not present. using default.")
+	scrnx=400
+if 'scrny' in globals():
+	print ("Global variable: 'scrny' present. following its setting.")
+else:
+	print ("Global variable: 'scrny' not present. using default.")
+	scrny=400
 
 pygame.display.init()
 pygame.font.init()
-screensurf=pygame.display.set_mode((400, 370))
+screensurfdex=pygame.display.set_mode((scrnx, scrny))
+screensurf=pygame.Surface((400, 370))
+
 pygame.display.set_caption("Text-maze 5 launcher", "Text-maze 5 launcher")
 screensurf.fill((100, 120, 100))
 aboutbg=pygame.image.load(os.path.join('TILE', 'about-bg.png'))
@@ -49,6 +61,8 @@ def iteratelistB(listtoiterate):
 			screensurf.blit(textit, (0, texhigcnt))
 			texhigcnt += texhigjump
 			indlcnt += 1
+		screensurfQ=pygame.transform.scale(screensurf, (scrnx, scrny))
+		screensurfdex.blit(screensurfQ, (0, 0))
 		pygame.display.update()
 		pygame.event.pump()
 		pygame.event.clear()

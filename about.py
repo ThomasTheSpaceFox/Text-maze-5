@@ -10,8 +10,19 @@ from pygame.locals import *
 
 pygame.display.init()
 pygame.font.init()
+if 'scrnx' in globals():
+	print ("Global variable: 'scrnx' present. following its setting.")
+else:
+	print ("Global variable: 'scrnx' not present. using default.")
+	scrnx=400
+if 'scrny' in globals():
+	print ("Global variable: 'scrny' present. following its setting.")
+else:
+	print ("Global variable: 'scrny' not present. using default.")
+	scrny=400
 
-screensurf=pygame.display.set_mode((400, 370))
+screensurfdex=pygame.display.set_mode((scrnx, scrny))
+screensurf=pygame.Surface((400, 400))
 screensurf.fill((100, 120, 100))
 aboutbg=pygame.image.load(os.path.join('TILE', 'about-bg.png'))
 titlebg=pygame.image.load(os.path.join('TILE', 'game-bg.png'))
@@ -33,6 +44,8 @@ for fnx in abt:
 	screensurf.blit(abttextB, (0, pixcnt1))
 	screensurf.blit(abttext, (0, pixcnt1))
 	pixcnt1 += pixjmp
+screensurfQ=pygame.transform.scale(screensurf, (scrnx, scrny))
+screensurfdex.blit(screensurfQ, (0, 0))
 pygame.display.update()
 evhappenflg2=0
 while evhappenflg2==0:
@@ -41,4 +54,4 @@ while evhappenflg2==0:
 			if event.type == KEYDOWN and event.key == K_RETURN:
 				evhappenflg2=1
 				break
-screensurf=pygame.display.set_mode((400, 370))
+screensurfdex=pygame.display.set_mode((scrnx, scrny), RESIZABLE)

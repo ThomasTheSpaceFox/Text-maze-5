@@ -50,6 +50,18 @@ if 'DEBUG' in globals():
 else:
 	print ("Global variable: 'DEBUG' not present. using default.")
 	DEBUG=0
+if 'scrnx' in globals():
+	print ("Global variable: 'scrnx' present. following its setting.")
+else:
+	print ("Global variable: 'scrnx' not present. using default.")
+	scrnx=400
+if 'scrny' in globals():
+	print ("Global variable: 'scrny' present. following its setting.")
+else:
+	print ("Global variable: 'scrny' not present. using default.")
+	scrny=400
+
+
 
 def debugmsg(msg, printplaypos=0):
 	if DEBUG==1:
@@ -74,7 +86,8 @@ pygame.display.init()
 pygame.font.init()
 windowicon=pygame.image.load(os.path.join('TILE', 'icon32.png'))
 pygame.display.set_icon(windowicon)
-screensurf=pygame.display.set_mode((400, 370))
+screensurfdex=pygame.display.set_mode((scrnx, scrny), RESIZABLE)
+screensurf=pygame.Surface((400, 400))
 pygame.display.set_icon(windowicon)
 pygame.display.set_caption("Text-maze 5", "Text-maze 5")
 debugmsg("Loading Graphical data.")
@@ -108,6 +121,22 @@ tiletiledfloor=pygame.image.load(os.path.join('TILE', 'tilefloor.png'))
 tileoutside=pygame.image.load(os.path.join('TILE', 'outsidein.png'))
 tilebrickpath=pygame.image.load(os.path.join('TILE', 'brickpath.png'))
 tilesand=pygame.image.load(os.path.join('TILE', 'sand.png'))
+#(added batch-o-tiles 1)
+tilecobblewall=pygame.image.load(os.path.join('TILE', 'cobblewall.png'))
+tiledirt=pygame.image.load(os.path.join('TILE', 'dirt.png'))
+tilestone=pygame.image.load(os.path.join('TILE', 'stone.png'))
+tiledarkstone=pygame.image.load(os.path.join('TILE', 'darkstone.png'))
+tilelava=pygame.image.load(os.path.join('TILE', 'lava.png'))
+tilegreengoo=pygame.image.load(os.path.join('TILE', 'greengoo.png'))
+#second interior set
+tilehardwood=pygame.image.load(os.path.join('TILE', 'hardwoodfloor.png'))
+tileconcretefloor=pygame.image.load(os.path.join('TILE', 'concretefloor.png'))
+tilesteelfloor=pygame.image.load(os.path.join('TILE', 'steelfloor.png'))
+tilegirderwall=pygame.image.load(os.path.join('TILE', 'girderwall.png'))
+
+#skytiles
+tilesky1=pygame.image.load(os.path.join('TILE', 'sky1.png'))
+
 #overlay graphics
 ovflowers=pygame.image.load(os.path.join('TILE', 'ovflowers.png'))
 ovcrate=pygame.image.load(os.path.join('TILE', 'ovcrate.png'))
@@ -115,14 +144,26 @@ ovbuntowel=pygame.image.load(os.path.join('TILE', 'ovbuntowel.png'))
 ovbunraft=pygame.image.load(os.path.join('TILE', 'ovbunraft.png'))
 ovbunstand=pygame.image.load(os.path.join('TILE', 'ovbunstand.png'))
 ovsink=pygame.image.load(os.path.join('TILE', 'ovsink.png'))
+ovcounter=pygame.image.load(os.path.join('TILE', 'ovcounter.png'))
+
 ovtoilet=pygame.image.load(os.path.join('TILE', 'ovtoilet.png'))
 ovcat1=pygame.image.load(os.path.join('TILE', 'cat1.png'))
+ovcat2=pygame.image.load(os.path.join('TILE', 'cat2.png'))
+ovcat3=pygame.image.load(os.path.join('TILE', 'cat3.png'))
+
+ovmouse1=pygame.image.load(os.path.join('TILE', 'mouse1.png'))
 #special shadows
 wallshadow=pygame.image.load(os.path.join('TILE', 'wallshadow.png'))
+landshadow=pygame.image.load(os.path.join('TILE', 'landshadow.png'))
+wallliquidshadow=pygame.image.load(os.path.join('TILE', 'wallliquidshadow.png'))
+
 playerfuzzshad=pygame.image.load(os.path.join('TILE', 'playerfuzzshad.png'))
 #gates
 gateopen=pygame.image.load(os.path.join('TILE', 'gateopen.png'))
 gateclosed=pygame.image.load(os.path.join('TILE', 'gateclosed.png'))
+#switches
+switchon=pygame.image.load(os.path.join('TILE', 'switchon.png'))
+switchoff=pygame.image.load(os.path.join('TILE', 'switchoff.png'))
 
 #hudfaces
 hudfacehappy=pygame.image.load(os.path.join('TILE', 'hudfacehappy.png'))
@@ -142,6 +183,7 @@ playx=int((setuptag.find('startposx')).text)
 playy=int((setuptag.find('startposy')).text)
 mazemodpath=os.path.join("MAZE", ((root.find('maingrid')).text))
 nodetag=root.find('nodes')
+forktag=root.find('forks')
 mazetitle=(setuptag.find('mazename')).text
 print ("data loaded. \n")
 debugset = ('1')
@@ -165,8 +207,43 @@ def tileblit(xval, yval, tilestring, xfoo, yfoo, drawfox=0):
 		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
 		if inside==1:
 			screensurf.blit(tileoutside, (xval, yval))
+	if tilestring=="C":
+		screensurf.blit(tilecobblewall, (xval, yval))
+		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
+		if inside==1:
+			screensurf.blit(tileoutside, (xval, yval))
 	if tilestring=="0":
 		screensurf.blit(tilefloor, (xval, yval))
+		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
+		if inside==1:
+			screensurf.blit(tileoutside, (xval, yval))
+	if tilestring=="e":
+		screensurf.blit(tiledirt, (xval, yval))
+		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
+		if inside==1:
+			screensurf.blit(tileoutside, (xval, yval))
+	if tilestring=="S":
+		screensurf.blit(tilestone, (xval, yval))
+		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
+		if inside==1:
+			screensurf.blit(tileoutside, (xval, yval))
+	if tilestring=="X":
+		screensurf.blit(tilegreengoo, (xval, yval))
+		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
+		if inside==1:
+			screensurf.blit(tileoutside, (xval, yval))
+	if tilestring=="l":
+		screensurf.blit(tilelava, (xval, yval))
+		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
+		if inside==1:
+			screensurf.blit(tileoutside, (xval, yval))
+	if tilestring=="z":
+		screensurf.blit(tilesky1, (xval, yval))
+		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
+		if inside==1:
+			screensurf.blit(tileoutside, (xval, yval))
+	if tilestring=="D":
+		screensurf.blit(tiledarkstone, (xval, yval))
 		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
 		if inside==1:
 			screensurf.blit(tileoutside, (xval, yval))
@@ -224,6 +301,35 @@ def tileblit(xval, yval, tilestring, xfoo, yfoo, drawfox=0):
 		else:
 			screensurf.blit(tileroof1, (xval, yval))
 		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
+	if tilestring=="Q":
+		
+		if inside==1:
+			screensurf.blit(tilegirderwall, (xval, yval))
+		else:
+			screensurf.blit(tileroof1, (xval, yval))
+		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
+	if tilestring=="P":
+		
+		if inside==1:
+			screensurf.blit(tilesteelfloor, (xval, yval))
+		else:
+			screensurf.blit(tileroof1, (xval, yval))
+		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
+	if tilestring=="Z":
+		
+		if inside==1:
+			screensurf.blit(tileconcretefloor, (xval, yval))
+		else:
+			screensurf.blit(tileroof1, (xval, yval))
+		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
+	if tilestring=="H":
+		
+		if inside==1:
+			screensurf.blit(tilehardwood, (xval, yval))
+		else:
+			screensurf.blit(tileroof1, (xval, yval))
+		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
+	
 	if tilestring=="r":
 		
 		if inside==1:
@@ -316,8 +422,8 @@ def tilegriddraw2():
 		yshad=(playy + 1)
 		shadblk=lookpoint(playx, yshad)
 		curblk=lookpoint(playx, playy)
-		if shadblk=="1" or shadblk=="R" or shadblk=="r"  or shadblk=="c"   or shadblk=="t":
-			if curblk!="1" and curblk!="R" and curblk!="c" and curblk!="t" and curblk!="r":
+		if shadblk=="1" or shadblk=="R"  or shadblk=="r"  or shadblk=="c"   or shadblk=="t" or shadblk=="Q" or shadblk=="P" or shadblk=="Z" or shadblk=="H" or shadblk=="C":
+			if curblk!="1" and curblk!="R" and curblk!="c" and curblk!="t" and curblk!="r" and curblk!="Q" and curblk!="P" and curblk!="H" and curblk!="Z" and curblk!="C":
 				if lastmove=="F":
 					screensurf.blit(shadtileplayer, (160, 180))
 				if lastmove=="B":
@@ -357,12 +463,20 @@ def overlayblit(overlaytype):
 		return(ovbunstand)
 	if overlaytype=="sink":
 		return(ovsink)
+	if overlaytype=="counter":
+		return(ovcounter)
 	if overlaytype=="toilet":
 		return(ovtoilet)
 	if overlaytype=="crate":
 		return(ovcrate)
 	if overlaytype=="cat1":
 		return(ovcat1)
+	if overlaytype=="cat2":
+		return(ovcat2)
+	if overlaytype=="cat3":
+		return(ovcat3)
+	if overlaytype=="mouse1":
+		return(ovmouse1)
 
 def overlayscan():
 	for node in nodetag.findall("overlay"):
@@ -431,12 +545,12 @@ def overlayscanB(xval, yval, xco, yco, drawfox=0):
 		Qvis=node.attrib.get('area')
 		Qrotate=node.attrib.get('rotate', "0")
 		
-		keyid=node.attrib.get('keyid', "0")
+		#keyid=node.attrib.get('keyid', "0")
 		onkey=node.attrib.get('onkey', "0")
 		offkey=node.attrib.get('offkey', "0")
 		if ((onkey=="0" and offkey=="0") or (onkey=="0" and offkey not in keylist) or (onkey in keylist and offkey=="0") or (onkey in keylist and offkey not in keylist)):
-			if not keyid in keylist:
-				keylist.extend([keyid])
+			#if not keyid in keylist:
+			#	keylist.extend([keyid])
 			if Qvis=="i" and inside==1:
 				ovvis=1
 			elif Qvis=="o" and inside==0:
@@ -445,6 +559,8 @@ def overlayscanB(xval, yval, xco, yco, drawfox=0):
 				ovvis=1
 			else:
 				ovvis=0
+		else:
+			ovvis=0
 		labtext=overlayblit(Qtype)
 		if ovvis==1:
 			if QX==xval and QY==yval:
@@ -473,14 +589,37 @@ def overlayscanB(xval, yval, xco, yco, drawfox=0):
 						screensurf.blit(gateopen, (xco, yco))
 					else:
 						screensurf.blit(gateclosed, (xco, yco))
-				
+	for node in nodetag.findall("switch"):
+		if int(node.attrib.get('x'))==xval and int(node.attrib.get('y'))==yval:
+			keyid=node.attrib.get('keyid', "0")
+			Qvis=node.attrib.get('area', "b")
+			if Qvis=="i" and inside==1:
+				ovvis=1
+			elif Qvis=="o" and inside==0:
+				ovvis=1
+			elif Qvis=="b":
+				ovvis=1
+			else:
+				ovvis=0
+			
+			if keyid!="0" and ovvis==1:
+				if not keyid in keylist:
+					screensurf.blit(switchoff, (xco, yco))
+				elif keyid in keylist:
+					screensurf.blit(switchon, (xco, yco))
 	yshad=(yval + 1)
 	shadblk=lookpoint(xval, yshad)
 	curblk=lookpoint(xval, yval)
 	if 0==0:
-		if shadblk=="1" or shadblk=="R" or shadblk=="r"  or shadblk=="c"   or shadblk=="t":
-			if curblk!="1" and curblk!="R" and curblk!="c" and curblk!="t" and curblk!="r":
-				screensurf.blit(wallshadow, (xco, yco))
+		if shadblk=="1" or shadblk=="R" or shadblk=="r"  or shadblk=="c"   or shadblk=="t" or shadblk=="C" or shadblk=="Q" or shadblk=="P" or shadblk=="Z" or shadblk=="H":
+			if curblk!="1" and curblk!="R" and curblk!="C" and curblk!="c" and curblk!="t" and curblk!="r" and curblk!="Q" and curblk!="P" and curblk!="Z" and curblk!="H" and curblk!="z":
+				if curblk=="w" or curblk=="l" or curblk=="X":
+					screensurf.blit(wallliquidshadow, (xco, yco))
+				else:
+					screensurf.blit(wallshadow, (xco, yco))
+		elif shadblk!="w" and shadblk!="l" and shadblk!="X" and shadblk!="x":
+			if curblk=="w" or curblk=="l" or curblk=="X":
+				screensurf.blit(landshadow, (xco, yco))
 			
 	
 	
@@ -570,12 +709,30 @@ def winscreenwait():
 		for event in pygame.event.get():
 			if event.type == KEYDOWN:
 				return()
+
+def convscreenwait():
+	while True:
+		time.sleep(.1)
+		for event in pygame.event.get():
+			if event.type == KEYDOWN and event.key != K_UP and event.key != K_DOWN and event.key != K_LEFT and event.key != K_RIGHT and event.key != K_w and event.key != K_a and event.key != K_s and  event.key != K_d:
+				return([0, 0, 0])
+			if event.type == VIDEORESIZE:
+				sxh=event.h
+				if sxh<400:
+					sxh=400
+				sxratio=(sxh-400)
+				sxw=int(sxratio + 400)
+				screensurfdex=pygame.display.set_mode((sxw, sxh), RESIZABLE)
+				return([1, sxw, sxh])
+
 #datapoint lookup function. used to read data points from the main .grid file.
 #when the point i out-of-range. 1 is returned.
 def lookpoint(lookptx, lookpty):
 	lineycnt=1
 	linexcnt=1
-	lookuppointis='1'
+	
+	lookupdef=setuptag.attrib.get("defaulttile", "1")
+	lookuppointis=lookupdef
 	m = open(mazemodpath)
 	for lineylst in m:
 		if lineycnt==lookpty:
@@ -585,7 +742,7 @@ def lookpoint(lookptx, lookpty):
 				linexcnt += 1
 		lineycnt += 1
 	if lookuppointis=="\n":
-		lookuppointis='1'
+		lookuppointis=lookupdef
 	return (lookuppointis)
 
 #used by wall detection logic. modified to simplify wall detection.
@@ -604,11 +761,27 @@ def lookpointB(lookptx, lookpty):
 		lineycnt += 1
 	if lookuppointis=="w":
 		lookuppointis='1'
+	if lookuppointis=="l":
+		lookuppointis='1'
+	if lookuppointis=="z":
+		lookuppointis='1'
+	if lookuppointis=="X":
+		lookuppointis='1'
+	if lookuppointis=="C":
+		lookuppointis='1'
+	if lookuppointis=="Q":
+		lookuppointis='1'
 	if lookuppointis=="\n":
 		lookuppointis='1'
 	if lookuppointis=="g":
 		lookuppointis='0'
 	if lookuppointis=="s":
+		lookuppointis='0'
+	if lookuppointis=="e":
+		lookuppointis='0'
+	if lookuppointis=="S":
+		lookuppointis='0'
+	if lookuppointis=="D":
 		lookuppointis='0'
 	if lookuppointis=="d":
 		lookuppointis='0'
@@ -623,6 +796,12 @@ def lookpointB(lookptx, lookpty):
 	if lookuppointis=="r":
 		lookuppointis='0'
 	if lookuppointis=="t":
+		lookuppointis='0'
+	if lookuppointis=="P":
+		lookuppointis='0'
+	if lookuppointis=="Z":
+		lookuppointis='0'
+	if lookuppointis=="H":
 		lookuppointis='0'
 	for node in nodetag.findall("gate"):
 		if int(node.attrib.get('x'))==lookptx and int(node.attrib.get('y'))==lookpty:
@@ -694,7 +873,20 @@ def keyread():
 				return(BACKWARDWORDBIND)
 			if event.type == KEYDOWN and event.key == K_RIGHT:
 				return(RIGHTWODBIND)
-			
+			if event.type == KEYDOWN and event.key == K_1:
+				return("resize1")
+			if event.type == KEYDOWN and event.key == K_2:
+				return("resize2")
+			if event.type == KEYDOWN and event.key == K_3:
+				return("resize3")
+			if event.type == VIDEORESIZE:
+				sxh=event.h
+				if sxh<400:
+					sxh=400
+				sxratio=(sxh-400)
+				sxw=int(sxratio + 400)
+				screensurfdex=pygame.display.set_mode((sxw, sxh), RESIZABLE)
+				return("evresize")
 			if event.type == KEYDOWN and event.key == K_l:
 				return("l")
 			if event.type == KEYDOWN and event.key == K_t:
@@ -704,35 +896,60 @@ def popuptext(textto):
 	text = simplefontB.render(textto, True, (255, 255, 255), (0, 0, 0))
 	textbox = text.get_rect()
 	textbox.centerx=screensurf.get_rect().centerx
-	textbox.centery=330
+	textbox.centery=380
 	screensurf.blit(text, textbox)
 	
 	
 def convdup(convtext):
 	textchunk=""
+	Qscrnx=scrnx
+	Qscrny=scrny
+	tiptextmask=simplefontB.render(tiptext, True, (0, 0, 0), (0, 0, 0))
+	tiptextmaskbox = tiptextmask.get_rect()
+	tiptextmaskbox.centerx=screensurf.get_rect().centerx
+	tiptextmaskbox.centery=380
+	
+	screensurf.blit(tiptextmask, tiptextmaskbox)
 	textcont=(convtext + "\n")
 	screensurfbak=screensurf.copy()
+	fodchange=0
 	for texch in textcont:
 		#print texch
 		if texch=="\n":
 			popuptext(textchunk)
 			textchunk=""
+			screensurfQ=pygame.transform.scale(screensurf, (Qscrnx, Qscrny))
+			screensurfdex.blit(screensurfQ, (0, 0))
 			pygame.display.update()
-			winscreenwait()
+			retwile=0
+			retwile=convscreenwait()
+			if retwile[0]==1:
+				Qscrnx=retwile[1]
+				Qscrny=retwile[2]
+				fodchange=1
+			
 			screensurf.blit(screensurfbak, (0, 0))
 			#print "ping"
 		else:
 			textchunk=(textchunk + texch)
 			#print "pong"
+	return(fodchange)
+
+
 #old test data
 #if lookpoint(2, 2)==('0'):
 #	print ('blah')
 #print (lookpoint(2, 2))
 cantmoveflg=0
 #main loop
+forksanity=0
+tiptext=""
+showtiptext=0
 hudfacedef="1"
+forksanitycheck=0
 points=0
 keylist=["null"]
+keybak=["null"]
 skiploop=1
 loopskipstop=0
 while gameend==('0'):
@@ -850,7 +1067,9 @@ while gameend==('0'):
 	CENTER = lookpoint(playx, playy)
 	CENTERx=playx
 	CENTERy=playy
-	if CENTER=="c" or CENTER=="r" or CENTER=="t":
+	
+	#inside view tiles declared here (walls should not be specified)
+	if CENTER=="c" or CENTER=="r" or CENTER=="t" or CENTER=="P" or CENTER=="Z" or CENTER=="H":
 		inside=1
 	elif CENTER=="3":
 		print "nochange intereor flag"
@@ -872,6 +1091,10 @@ while gameend==('0'):
 		popuptext(looktext)
 		showlooktext=0
 		mipfx.play()
+	if showtiptext==1:
+		#drawheadertext(looktext, 1)
+		popuptext(tiptext)
+		showtiptext=0
 	if hudface=="1":
 		hudfacesel=hudfacecasual
 	elif hudface=="2":
@@ -896,6 +1119,7 @@ while gameend==('0'):
 			convtext=node.text
 			hudface=node.attrib.get('face', "1")
 			keyid=node.attrib.get('keyid', "0")
+			takekey=node.attrib.get('takekey', "0")
 			onkey=node.attrib.get('onkey', "0")
 			offkey=node.attrib.get('offkey', "0")
 			if ((onkey=="0" and offkey=="0") or (onkey=="0" and offkey not in keylist) or (onkey in keylist and offkey=="0") or (onkey in keylist and offkey not in keylist)):
@@ -912,9 +1136,14 @@ while gameend==('0'):
 					hudfacesel=hudfacehappy
 				if not keyid in keylist:
 					keylist.extend([keyid])
+				if takekey in keylist and takekey!="0":
+					keylist.remove([takekey])
 				screensurf.blit(hudfacesel, (54, 340))
 				hudface=hudfacedef
-				convdup(convtext)
+				fodx=convdup(convtext)
+				if fodx==1:
+					scrnx=screensurfdex.get_width()
+					scrny=screensurfdex.get_height()
 				break
 		
 	
@@ -925,6 +1154,23 @@ while gameend==('0'):
 		while (usrentry!=FORWARDWORDBIND and usrentry!=BACKWARDWORDBIND and usrentry!=LEFTWORDBIND and usrentry!=RIGHTWODBIND and usrentry!=QUITWORDBIND and usrentry!="l" and usrentry!="t" and usrentry!="debugF" and usrentry!="debugB" and usrentry!="debugL" and usrentry!="debugR"):
 			#drawfoottext(("forward:" + FORWARDWORDBIND + " | backward:" + 	BACKWARDWORDBIND + " | look around: l | talk: t"), 0)
 			#drawfoottext(("left:" + LEFTWORDBIND + " | right:" + RIGHTWODBIND + " | quit:" + QUITWORDBIND), 1)
+			if usrentry=="resize1":
+				screensurfdex=pygame.display.set_mode((400, 400), RESIZABLE)
+				scrnx=400
+				scrny=400
+			if usrentry=="resize2":
+				screensurfdex=pygame.display.set_mode((600, 600), RESIZABLE)
+				scrnx=600
+				scrny=600
+			if usrentry=="resize3":
+				screensurfdex=pygame.display.set_mode((700, 700), RESIZABLE)
+				scrnx=700
+				scrny=700
+			if usrentry=="evresize":
+				scrnx=screensurfdex.get_width()
+				scrny=screensurfdex.get_height()
+			screensurfQ=pygame.transform.scale(screensurf, (scrnx, scrny))
+			screensurfdex.blit(screensurfQ, (0, 0))
 			pygame.display.update()
 			usrentry=keyread()
 	else:
@@ -996,12 +1242,15 @@ while gameend==('0'):
 	for node in nodetag.findall("trig"):
 		if int(node.attrib.get('x'))==playx and int(node.attrib.get('y'))==playy:
 			keyid=node.attrib.get('keyid', "0")
+			takekey=node.attrib.get('takekey', "0")
 			onkey=node.attrib.get('onkey', "0")
 			offkey=node.attrib.get('offkey', "0")
 			if ((onkey=="0" and offkey=="0") or (onkey=="0" and offkey not in keylist) or (onkey in keylist and offkey=="0") or (onkey in keylist and offkey not in keylist)):
 				showlooktext=1
 				if not keyid in keylist:
 					keylist.extend([keyid])
+				if takekey in keylist and takekey!="0":
+					keylist.remove(takekey)
 				looktext=node.attrib.get('text')
 				hudface=node.attrib.get('face', "1")
 				debugmsg("Triggered statement(trig): ", 1)
@@ -1010,6 +1259,7 @@ while gameend==('0'):
 		for node in nodetag.findall("look"):
 			if int(node.attrib.get('x'))==playx and int(node.attrib.get('y'))==playy:
 				looktext=node.attrib.get('text')
+				takekey=node.attrib.get('takekey', "0")
 				keyid=node.attrib.get('keyid', "0")
 				onkey=node.attrib.get('onkey', "0")
 				offkey=node.attrib.get('offkey', "0")
@@ -1017,15 +1267,30 @@ while gameend==('0'):
 					showlooktext=1
 					if not keyid in keylist:
 						keylist.extend([keyid])
+					if takekey in keylist and takekey!="0":
+						keylist.remove(takekey)
 					hudface=node.attrib.get('face', "1")
 					debugmsg("look statement(look): ", 1)
 					break
+		for node in nodetag.findall("switch"):
+			if int(node.attrib.get('x'))==playx and int(node.attrib.get('y'))==playy:
+				keyid=node.attrib.get('keyid', "0")
+				if keyid!="0":
+					if not keyid in keylist:
+						keylist.extend([keyid])
+						debugmsg("switchon")
+					elif keyid in keylist:
+						debugmsg("switchoff")
+						keylist.remove(keyid)
+				
+	
 	if usrentry=="t":
 		for node in nodetag.findall("conv"):
 			if int(node.attrib.get('x'))==playx and int(node.attrib.get('y'))==playy:
 				convtext=node.text
 				hudface=node.attrib.get('face', "1")
 				keyid=node.attrib.get('keyid', "0")
+				takekey=node.attrib.get('takekey', "0")
 				onkey=node.attrib.get('onkey', "0")
 				offkey=node.attrib.get('offkey', "0")
 				if ((onkey=="0" and offkey=="0") or (onkey=="0" and offkey not in keylist) or (onkey in keylist and offkey=="0") or (onkey in keylist and offkey not in keylist)):
@@ -1042,10 +1307,24 @@ while gameend==('0'):
 						hudfacesel=hudfacehappy
 					if not keyid in keylist:
 						keylist.extend([keyid])
+					if takekey in keylist and takekey!="0":
+						keylist.remove([takekey])
 					screensurf.blit(hudfacesel, (54, 340))
 					hudface=hudfacedef
-					convdup(convtext)
+					fodx=convdup(convtext)
+					if fodx==1:
+						scrnx=screensurfdex.get_width()
+						scrny=screensurfdex.get_height()
 					break
+	else:
+		for node in nodetag.findall("conv"):
+			if int(node.attrib.get('x'))==playx and int(node.attrib.get('y'))==playy:
+				
+				onkey=node.attrib.get('onkey', "0")
+				offkey=node.attrib.get('offkey', "0")
+				if ((onkey=="0" and offkey=="0") or (onkey=="0" and offkey not in keylist) or (onkey in keylist and offkey=="0") or (onkey in keylist and offkey not in keylist)):
+					showtiptext=1
+					tiptext="press [t] to talk."
 	
 	if skiploop!=1:
 		for node in nodetag.findall("teleport"):
@@ -1060,6 +1339,56 @@ while gameend==('0'):
 					debugmsg("end pos:", 1)
 					skiploop=1
 					break
+	if keylist!=keybak or forksanitycheck==1:
+		debugmsg("keyid change detected. reparsing forks.")
+		for fork in forktag.findall("batchtrig"):
+			masterkey=fork.attrib.get("keyid")
+			complist=[1] 
+			for keyif in fork.findall("k"):
+				ifpol=keyif.attrib.get("if")
+				subkey=keyif.attrib.get("keyid")
+				if subkey in keylist:
+					if ifpol=="1":
+						complist.extend([1])
+					else:
+						complist.extend([0])
+				elif not subkey in keylist:
+					if ifpol=="0":
+						complist.extend([1])
+					else:
+						complist.extend([0])
+			if len(set(complist)) == 1:
+				if not masterkey in keylist:
+					keylist.extend([masterkey])
+					forksanity=1
+			else:
+				if masterkey in keylist:
+					keylist.remove(masterkey)
+					forksanity=1
+		for fork in forktag.findall("batchset"):
+			masterkey=fork.attrib.get("keyid")
+			toggpol=fork.attrib.get("set")
+			if masterkey in keylist:
+				keylist.remove(masterkey)
+				if toggpol=="1":
+					for subkey in fork.findall("k"):
+						subkeyid=subkey.attrib.get("keyid")
+						if not subkeyid in keylist:
+							keylist.extend([subkeyid])
+					forksanity=1
+				else:
+					for subkey in fork.findall("k"):
+						subkeyid=subkey.attrib.get("keyid")
+						if subkeyid in keylist:
+							keylist.remove(subkeyid)
+					forksanity=1
+		if forksanity==1:
+			forksanitycheck=1
+			forksanity=0
+			skiploop=1
+		else:
+			forksanitycheck=0
+	keybak=list(keylist)
 	if loopskipstop==1:
 		skiploop=0
 		loopskipstop=0
@@ -1073,7 +1402,7 @@ while gameend==('0'):
 		gameend=('1')
 		debugmsg("User Has Quit.")
 	#plays footstep sound fx
-	if (cantmoveflg==0 and usrentry!=QUITWORDBIND and usrentry!="l"and usrentry!="t" ):
+	if (cantmoveflg==0 and usrentry!=QUITWORDBIND and usrentry!="l" and usrentry!="t" and usrentry!="null"):
 		stepfx.play()
 		if usrentry=="debugF" or usrentry=="debugB" or usrentry=="debugL" or usrentry=="debugR":
 			debugmsg("Player DEBUG move:", 1)
@@ -1092,6 +1421,8 @@ while gameend==('0'):
 		winscreenbox.centery = ((screensurf.get_rect().centery) - 60)
 		screensurf.blit(winscreen, winscreenbox)
 		screensurf.blit(wintext, wintextbox)
+		screensurfQ=pygame.transform.scale(screensurf, (scrnx, scrny))
+		screensurfdex.blit(screensurfQ, (0, 0))
 		pygame.display.update()
 		pygame.event.clear()
 		winscreenwait()
