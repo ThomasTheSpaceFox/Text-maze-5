@@ -81,6 +81,8 @@ if MENUFLG==0:
 	pygame.mixer.music.play(-1)
 stepfx=pygame.mixer.Sound(os.path.join('AUDIO', 'step.ogg'))
 mipfx=pygame.mixer.Sound(os.path.join('AUDIO', 'mip.ogg'))
+switchonfx=pygame.mixer.Sound(os.path.join('AUDIO', 'switchon.ogg'))
+switchofffx=pygame.mixer.Sound(os.path.join('AUDIO', 'switchoff.ogg'))
 
 pygame.display.init()
 pygame.font.init()
@@ -145,6 +147,7 @@ ovbunraft=pygame.image.load(os.path.join('TILE', 'ovbunraft.png'))
 ovbunstand=pygame.image.load(os.path.join('TILE', 'ovbunstand.png'))
 ovsink=pygame.image.load(os.path.join('TILE', 'ovsink.png'))
 ovcounter=pygame.image.load(os.path.join('TILE', 'ovcounter.png'))
+ovarrow=pygame.image.load(os.path.join('TILE', 'ovarrow.png'))
 
 ovtoilet=pygame.image.load(os.path.join('TILE', 'ovtoilet.png'))
 ovcat1=pygame.image.load(os.path.join('TILE', 'cat1.png'))
@@ -152,6 +155,20 @@ ovcat2=pygame.image.load(os.path.join('TILE', 'cat2.png'))
 ovcat3=pygame.image.load(os.path.join('TILE', 'cat3.png'))
 
 ovmouse1=pygame.image.load(os.path.join('TILE', 'mouse1.png'))
+ovbulletin=pygame.image.load(os.path.join('TILE', 'ovbulletin.png'))
+NPCballoon=pygame.image.load(os.path.join('TILE', 'NPCballoon.png'))
+#overlay signs
+signwater=pygame.image.load(os.path.join('TILE', 'signwater.png'))
+signlava=pygame.image.load(os.path.join('TILE', 'signlava.png'))
+signacid=pygame.image.load(os.path.join('TILE', 'signacid.png'))
+signpool=pygame.image.load(os.path.join('TILE', 'signpool.png'))
+signriver=pygame.image.load(os.path.join('TILE', 'signriver.png'))
+signtree=pygame.image.load(os.path.join('TILE', 'signtree.png'))
+signdiner=pygame.image.load(os.path.join('TILE', 'signdiner.png'))
+signbeach=pygame.image.load(os.path.join('TILE', 'signbeach.png'))
+signbun=pygame.image.load(os.path.join('TILE', 'signbun.png'))
+signinfo=pygame.image.load(os.path.join('TILE', 'signinfo.png'))
+signtask=pygame.image.load(os.path.join('TILE', 'signtask.png'))
 #special shadows
 wallshadow=pygame.image.load(os.path.join('TILE', 'wallshadow.png'))
 landshadow=pygame.image.load(os.path.join('TILE', 'landshadow.png'))
@@ -171,6 +188,7 @@ hudfacesad=pygame.image.load(os.path.join('TILE', 'hudfacesad.png'))
 hudfaceshock=pygame.image.load(os.path.join('TILE', 'hudfaceshock.png'))
 hudfaceangry=pygame.image.load(os.path.join('TILE', 'hudfaceanger.png'))
 hudfacecasual=pygame.image.load(os.path.join('TILE', 'hudfacecasual.png'))
+hudfacebored=pygame.image.load(os.path.join('TILE', 'hudfacebored.png'))
 
 winscreen=pygame.image.load(os.path.join('TILE', 'winscreen.png'))
 
@@ -477,6 +495,35 @@ def overlayblit(overlaytype):
 		return(ovcat3)
 	if overlaytype=="mouse1":
 		return(ovmouse1)
+	if overlaytype=="arrow":
+		return(ovarrow)
+	if overlaytype=="signwater":
+		return(signwater)
+	if overlaytype=="signlava":
+		return(signlava)
+	if overlaytype=="signacid":
+		return(signacid)
+	if overlaytype=="signbeach":
+		return(signbeach)
+	if overlaytype=="signdiner":
+		return(signdiner)
+	if overlaytype=="signpool":
+		return(signpool)
+	if overlaytype=="signriver":
+		return(signriver)
+	if overlaytype=="signtree":
+		return(signtree)
+	if overlaytype=="signbun":
+		return(signbun)
+	if overlaytype=="signinfo":
+		return(signinfo)
+	if overlaytype=="signtask":
+		return(signtask)
+	if overlaytype=="NPCballoon":
+		return(NPCballoon)
+	if overlaytype=="bulletin":
+		return(ovbulletin)
+	
 
 def overlayscan():
 	for node in nodetag.findall("overlay"):
@@ -823,8 +870,50 @@ def lookpointB(lookptx, lookpty):
 				break
 	return (lookuppointis)
 	
+def debugcon():
+	print "TEXT MAZE 5 DEBUG CONSOLE ACTIVE"
+	print "type return to return to gameplay."
+	USRCMD="null"
+	while USRCMD!=("return"):
+		USRENTRYLINE = raw_input(':')
+		USRLST=USRENTRYLINE.split(" ", 1)
+		try:
+			USRCMD=(USRLST[0])
+		except IndexError:
+			USRCMD=""
+		try:
+			USRTEXT=(USRLST[1])
+		except IndexError:
+			USRTEXT=""
+		if (USRCMD==("keys")):
+			print "current keylist:"
+			print keylist
+		if (USRCMD==("info")):
+			print "playx:" + str(playx)
+			print "playy:" + str(playy)
+			print "mazexml:" + mazefilepath
+			print "mazegrid:" + mazemodpath
+			print "mazename:" + mazetitle
+			print "defaulttile: " + setuptag.attrib.get("defaulttile", "1")
+			print "startx: " + (setuptag.find('startposx')).text
+			print "starty: " + (setuptag.find('startposy')).text
+		if (USRCMD==("give") and USRTEXT!=""):
+			if not USRTEXT in keylist:
+				keylist.extend([USRTEXT])
+		if (USRCMD==("take") and USRTEXT!=""):
+			if USRTEXT in keylist:
+				keylist.remove(USRTEXT)
+		if (USRCMD==("help")):
+			print '''Help:
 
-
+keys: print current keylist
+give [keyid]: grant a keyid
+take [keyid]: take a keyid
+info: engine status info.)
+return: return to gameplay.
+help: this text.
+(be sure to double check any manual changes!)
+'''
 #function that draws text at the bottom of the display
 def drawfoottext(textto, linemode):
 	text = simplefont.render(textto, True, (255, 255, 255), (0, 0, 0))
@@ -865,6 +954,8 @@ def keyread():
 				return("debugB")
 			if event.type == KEYDOWN and event.key == K_RIGHT and (pygame.key.get_mods() & KMOD_SHIFT or pygame.key.get_mods() & KMOD_CAPS) and DEBUG==1:
 				return("debugR")
+			if event.type == KEYDOWN and event.key == K_z and pygame.key.get_mods() & KMOD_SHIFT and DEBUG==1:
+				return("debugcon")
 			if event.type == KEYDOWN and event.key == K_UP:
 				return(FORWARDWORDBIND)
 			if event.type == KEYDOWN and event.key == K_LEFT:
@@ -1105,6 +1196,8 @@ while gameend==('0'):
 		hudfacesel=hudfaceshock
 	elif hudface=="5":
 		hudfacesel=hudfacehappy
+	elif hudface=="6":
+		hudfacesel=hudfacebored
 	#hudfacesel=pygame.transform.scale(hudfacesel, (30, 30))
 	screensurf.blit(hudfacesel, (54, 340))
 	hudface=hudfacedef
@@ -1169,6 +1262,9 @@ while gameend==('0'):
 			if usrentry=="evresize":
 				scrnx=screensurfdex.get_width()
 				scrny=screensurfdex.get_height()
+			if usrentry=="debugcon":
+				debugcon()
+				break
 			screensurfQ=pygame.transform.scale(screensurf, (scrnx, scrny))
 			screensurfdex.blit(screensurfQ, (0, 0))
 			pygame.display.update()
@@ -1277,11 +1373,41 @@ while gameend==('0'):
 				keyid=node.attrib.get('keyid', "0")
 				if keyid!="0":
 					if not keyid in keylist:
+						switchonfx.play()
 						keylist.extend([keyid])
 						debugmsg("switchon")
 					elif keyid in keylist:
 						debugmsg("switchoff")
+						switchofffx.play()
 						keylist.remove(keyid)
+		for node in nodetag.findall("itemlist"):
+			if int(node.attrib.get('x'))==playx and int(node.attrib.get('y'))==playy:
+				onkey=node.attrib.get('onkey', "0")
+				offkey=node.attrib.get('offkey', "0")
+				if ((onkey=="0" and offkey=="0") or (onkey=="0" and offkey not in keylist) or (onkey in keylist and offkey=="0") or (onkey in keylist and offkey not in keylist)):
+					itemlisth=45
+					itemlisthjmp=16
+					itemhead=node.attrib.get('listname')
+					popuptext(itemhead)
+					for listitm in node.findall("i"):
+						hideon=listitm.attrib.get('hideon', "0")
+						keyid=listitm.attrib.get('keyid')
+						itemtext=listitm.attrib.get('text')
+						
+						if (hideon=="0" and keyid in keylist) or (hideon=="1" and keyid not in keylist):
+							print itemtext
+							itemtextren=simplefontB.render(itemtext, True, (255, 255, 255), (0, 0, 0))
+							screensurf.blit(itemtextren, (10, itemlisth))
+							itemlisth += itemlisthjmp
+					screensurfQ=pygame.transform.scale(screensurf, (scrnx, scrny))
+					screensurfdex.blit(screensurfQ, (0, 0))
+					pygame.display.update()
+					retwile=convscreenwait()
+					if retwile[0]==1:
+						scrnx=retwile[1]
+						scrny=retwile[2]
+						fodchange=1
+							
 				
 	
 	if usrentry=="t":

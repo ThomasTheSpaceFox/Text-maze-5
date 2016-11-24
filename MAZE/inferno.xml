@@ -14,14 +14,48 @@
 			<k if="1" keyid="PUZswitch2"/>
 			<k if="1" keyid="PUZswitch3"/>
 		</batchtrig>
+		<batchtrig keyid="ACIDmaze">
+			<k if="1" keyid="ACIDswitch1"/>
+			<k if="1" keyid="ACIDswitch2"/>
+			<k if="1" keyid="ACIDswitch3"/>
+			<k if="1" keyid="ACIDswitch4"/>
+		</batchtrig>
 		<batchset keyid="PUZreset" set="0">
 			<k keyid="PUZswitch1"/>
 			<k keyid="PUZswitch2"/>
 			<k keyid="PUZswitch3"/>
 		</batchset>
+		<batchtrig keyid="exitdoor">
+			<k if="1" keyid="cert1"/>
+			<k if="1" keyid="cert2"/>
+			<k if="1" keyid="cert3"/>
+		</batchtrig>
 	</forks>
 	<maingrid>inferno.main.grid</maingrid>
 	<nodes>
+		<overlay x="8" y="10" area="o" type="signdiner"  rotate="0"/>
+		<overlay x="7" y="3" area="b" type="arrow"  rotate="2"/>
+		<overlay x="7" y="3" area="b" type="signtree"  rotate="0"/>
+		<overlay x="35" y="35" area="b" type="arrow"  rotate="3"/>
+		<overlay x="35" y="35" area="b" type="signacid"  rotate="0"/>
+		<overlay x="21" y="37" area="b" type="arrow"  rotate="2"/>
+		<overlay x="21" y="37" area="b" type="signacid"  rotate="0"/>
+		<gate x="8" y="35" keyid="exitdoor"/>
+		
+		
+		<switch x="51" y="27" keyid="ACIDswitch1"/>
+		<switch x="47" y="21" keyid="ACIDswitch2"/>
+		<switch x="33" y="26" keyid="ACIDswitch3"/>
+		<switch x="33" y="30" keyid="ACIDswitch4"/>
+		<overlay x="36" y="35" area="o" type="4"  rotate="3"/>
+		<overlay x="36" y="36" area="o" type="NPCballoon"  rotate="0" offkey="cert3" />
+		<overlay x="36" y="36" area="o" type="signtask"  rotate="0" offkey="cert3" />
+		<walkable x="36" y="35" force="1"/>
+		<conv x="36" y="34" offkey="ACIDmaze">Bun: turn on all 4 buttons
+Bun: to get a work certificate.
+Bun: and try not to get melted by acid. :p</conv>
+		<conv x="36" y="34" keyid="cert3" onkey="ACIDmaze">Bun: nice work.
+Bun: here is a work certificate.</conv>
 		<switch x="6" y="1" keyid="PUZswitch1"/>
 		<switch x="6" y="2" keyid="PUZswitch2"/>
 		<switch x="6" y="4" keyid="PUZswitch3"/>
@@ -53,9 +87,11 @@ Bun: here is a hint: it has 1 zero. :)</trigconv>
 		<conv x="2" y="2" onkey="starttalk">You: what is that smell? D: its horrid!
 Bun: sulfur.
 You: oh, lava feilds, right.</conv>
+		<overlay x="18" y="10" area="i" type="NPCballoon"  rotate="0" offkey="cert2" />
+		<overlay x="18" y="10" area="i" type="signtask"  rotate="0" offkey="cert2" />
 		<overlay x="18" y="9" area="i" type="cat2"  rotate="0" offkey="cert2"/>
 		<walkable x="18" y="9" force="1" offkey="cert2"/>
-		<trigconv x="17" y="9" keyid="rel" onkey="gardentalk" offkey="rel">Cat: can i help you?
+		<conv x="17" y="9" keyid="rel" onkey="gardentalk" offkey="rel">Cat: can i help you?
 You: a flower delivery.
 Cat: huh, hard times kid?
 You: I am in need of work certificates.
@@ -66,7 +102,23 @@ Cat: I need you to get money from mr smith.
 Cat: He is a cat-ophobic mouse.
 Cat: also if you could give him this flower?
 You: oh? ok. :) where does he live?
-Cat: just next door.</trigconv>
+Cat: just next door.</conv>
+		<itemlist x="12" y="36" listname="Current tasks">
+			<i hideon="1" keyid="cert1" text="Flower Delivery."/>
+			<i hideon="1"  keyid="cert2" text="Monitary mouse."/>
+			<i hideon="1" keyid="cert3" text="Acidic switching."/>
+		</itemlist>
+		<overlay x="12" y="36" area="b" type="bulletin"  rotate="0"/>
+		<label x="12" y="36" area="b" text="Jobs"/>
+		<itemlist x="4" y="3" offkey="gardentalk" listname="Current tasks">
+			<i hideon="1" keyid="cert1" text="Flower Delivery."/>
+		</itemlist>
+		<itemlist x="4" y="3" onkey="gardentalk"  listname="Current tasks">
+			<i hideon="1" keyid="cert1" text="Flower Delivery."/>
+			<i hideon="1"  keyid="cert2" text="Monetary mouse."/>
+		</itemlist>
+		<overlay x="4" y="3" area="b" type="bulletin"  rotate="0"/>
+		<label x="4" y="3" area="b" text="Jobs"/>
 		<trigconv x="17" y="9" keyid="cert2" onkey="mousemoney" offkey="cert2">You: Here is the money.
 Cat: Thank you.
 Cat: say, what was his reaction to the flower?
@@ -91,8 +143,12 @@ You: thank you.</trigconv>
 		<gate x="8" y="9" keyid="cert2"/>
 		<gate x="9" y="11" keyid="cert1"/>
 		<gate x="5" y="4" keyid="gardentalk"/>
+		<overlay x="54" y="12" area="i" type="NPCballoon"  rotate="0" offkey="cert1" />
+		<overlay x="54" y="12" area="i" type="signtask"  rotate="0" offkey="cert1" />
+
 		<overlay x="54" y="11" area="i" type="cat3"  rotate="0"/>
 		<walkable x="54" y="11" force="1"/>
+		<gate x="46" y="10" keyid="gardentalk"/>
 		<trigconv x="53" y="11" keyid="gardentalk" offkey="gardentalk">Farmer: so you need a work certificate eh?
 You: yes sir.
 Farmer: Then deliver this flower to 1 Small Plaza.

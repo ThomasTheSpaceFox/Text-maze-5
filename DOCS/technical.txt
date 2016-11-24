@@ -4,8 +4,42 @@ Text maze format 2 documentation can be found in the  comments of the
 included "sample.xml" 
 and in "text-maze-format-2.txt"
 
+DEBUG MODE:
+you can start any level in debug mode by using testlaunch.py
+ex on Linux: "./testlaunch.py MAZE/sample.xml"
+
+mainmenu.py and launcher.py NO NOT start the engine in debug mode.
+using debug mode:
+to walk through walls:
+
+hold shift or turn on caps lock, then use arrow keys to move over "unwalkable" surfaces.
+
+
+access debug console mode:
+press SHIFT+z
+the debug console will interrupt gameplay.
+
+it will start by printing the following in the console you started testlaunch in:
+"TEXT MAZE 5 DEBUG CONSOLE ACTIVE
+type return to return to gameplay.
+:"
+
+debug console commands:
+"Help:
+
+keys: print current keylist
+give [keyid]: grant a keyid
+take [keyid]: take a keyid
+info: engine status info.)
+return: return to gameplay.
+help: this text.
+(be sure to double check any manual changes!)"
+
+
 Shadow casting:
 The engine features automatic shadow casting.
 walls assumed to be above ground hight, as well as ALL interior tiles,
 cast shadows on other exterior tiles.
+also "land" tiles cast small shadows on liquids.
+wall shadows are also slightly longer on these surfaces.
 the player also has a "fuzzy circle" shadow.
