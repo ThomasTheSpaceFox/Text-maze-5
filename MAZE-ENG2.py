@@ -146,16 +146,32 @@ ovbuntowel=pygame.image.load(os.path.join('TILE', 'ovbuntowel.png'))
 ovbunraft=pygame.image.load(os.path.join('TILE', 'ovbunraft.png'))
 ovbunstand=pygame.image.load(os.path.join('TILE', 'ovbunstand.png'))
 ovsink=pygame.image.load(os.path.join('TILE', 'ovsink.png'))
+ovsinkr1=pygame.image.load(os.path.join('TILE', 'ovsinkr1.png'))
+ovsinkr2=pygame.image.load(os.path.join('TILE', 'ovsinkr2.png'))
+ovsinkr3=pygame.image.load(os.path.join('TILE', 'ovsinkr3.png'))
+
 ovcounter=pygame.image.load(os.path.join('TILE', 'ovcounter.png'))
+ovcounterr1=pygame.image.load(os.path.join('TILE', 'ovcounterr1.png'))
+ovcounterr2=pygame.image.load(os.path.join('TILE', 'ovcounterr2.png'))
+ovcounterr3=pygame.image.load(os.path.join('TILE', 'ovcounterr3.png'))
+
 ovarrow=pygame.image.load(os.path.join('TILE', 'ovarrow.png'))
 
 ovtoilet=pygame.image.load(os.path.join('TILE', 'ovtoilet.png'))
+ovtoiletr1=pygame.image.load(os.path.join('TILE', 'ovtoiletr1.png'))
+ovtoiletr2=pygame.image.load(os.path.join('TILE', 'ovtoiletr2.png'))
+ovtoiletr3=pygame.image.load(os.path.join('TILE', 'ovtoiletr3.png'))
+
 ovcat1=pygame.image.load(os.path.join('TILE', 'cat1.png'))
 ovcat2=pygame.image.load(os.path.join('TILE', 'cat2.png'))
 ovcat3=pygame.image.load(os.path.join('TILE', 'cat3.png'))
 
 ovmouse1=pygame.image.load(os.path.join('TILE', 'mouse1.png'))
 ovbulletin=pygame.image.load(os.path.join('TILE', 'ovbulletin.png'))
+ovbulletinr1=pygame.image.load(os.path.join('TILE', 'ovbulletinr1.png'))
+ovbulletinr2=pygame.image.load(os.path.join('TILE', 'ovbulletinr2.png'))
+ovbulletinr3=pygame.image.load(os.path.join('TILE', 'ovbulletinr3.png'))
+
 NPCballoon=pygame.image.load(os.path.join('TILE', 'NPCballoon.png'))
 #overlay signs
 signwater=pygame.image.load(os.path.join('TILE', 'signwater.png'))
@@ -173,6 +189,14 @@ signtask=pygame.image.load(os.path.join('TILE', 'signtask.png'))
 wallshadow=pygame.image.load(os.path.join('TILE', 'wallshadow.png'))
 landshadow=pygame.image.load(os.path.join('TILE', 'landshadow.png'))
 wallliquidshadow=pygame.image.load(os.path.join('TILE', 'wallliquidshadow.png'))
+#wall "side" hints
+hinthedge=pygame.image.load(os.path.join('TILE', 'hinthedge.png'))
+hintcobble=pygame.image.load(os.path.join('TILE', 'hintcobble.png'))
+hintbuild=pygame.image.load(os.path.join('TILE', 'hintbuild.png'))
+hintbuildgreen=pygame.image.load(os.path.join('TILE', 'hintbuildgreen.png'))
+
+hintbuildout=pygame.image.load(os.path.join('TILE', 'hintbuildout.png'))
+hintdoor=pygame.image.load(os.path.join('TILE', 'hintdoor.png'))
 
 playerfuzzshad=pygame.image.load(os.path.join('TILE', 'playerfuzzshad.png'))
 #gates
@@ -199,6 +223,23 @@ root = tree.getroot()
 setuptag=root.find('setup')
 playx=int((setuptag.find('startposx')).text)
 playy=int((setuptag.find('startposy')).text)
+viewfilterflg=setuptag.attrib.get('filter', "0")
+if viewfilterflg=="1":
+	filterA=setuptag.attrib.get('a')
+	filterR=setuptag.attrib.get('r')
+	filterB=setuptag.attrib.get('b')
+	filterG=setuptag.attrib.get('g')
+	viewfilter=pygame.Surface((80, 80))
+	viewfiltertall=pygame.Surface((80, 88))
+	viewfilter.fill((int(filterR), int(filterG), int(filterB)))
+	viewfilter.set_alpha(int(filterA))
+	viewfiltertall.fill((int(filterR), int(filterG), int(filterB)))
+	viewfiltertall.set_alpha(int(filterA))
+else:
+	viewfilter=pygame.Surface((80, 80))
+	viewfiltertall=pygame.Surface((80, 88))
+	viewfiltertall.set_alpha(0)
+	viewfilter.set_alpha(0)
 mazemodpath=os.path.join("MAZE", ((root.find('maingrid')).text))
 nodetag=root.find('nodes')
 forktag=root.find('forks')
@@ -220,149 +261,197 @@ bgtext = simplefont.render(mazetitle, True, (5, 59, 186))
 gamebg.blit(bgtext, (0, 0))
 hudface="1"
 def tileblit(xval, yval, tilestring, xfoo, yfoo, drawfox=0):
+	tilepost=pygame.Surface((400, 400), SRCALPHA)
 	if tilestring=="1":
-		screensurf.blit(tilewall, (xval, yval))
+		screensurf.blit(tilewall, (xval, (yval-8)))
+		Qinside=0
 		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
 		if inside==1:
-			screensurf.blit(tileoutside, (xval, yval))
+			tilepost.blit(tileoutside, (xval, yval))
 	if tilestring=="C":
-		screensurf.blit(tilecobblewall, (xval, yval))
+		screensurf.blit(tilecobblewall, (xval, (yval-8)))
+		Qinside=0
 		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
+		
 		if inside==1:
-			screensurf.blit(tileoutside, (xval, yval))
+			tilepost.blit(tileoutside, (xval, yval))
 	if tilestring=="0":
 		screensurf.blit(tilefloor, (xval, yval))
+		Qinside=0
 		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
+		
 		if inside==1:
-			screensurf.blit(tileoutside, (xval, yval))
+			tilepost.blit(tileoutside, (xval, yval))
 	if tilestring=="e":
 		screensurf.blit(tiledirt, (xval, yval))
+		Qinside=0
 		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
+		
 		if inside==1:
-			screensurf.blit(tileoutside, (xval, yval))
+			tilepost.blit(tileoutside, (xval, yval))
 	if tilestring=="S":
 		screensurf.blit(tilestone, (xval, yval))
+		Qinside=0
 		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
+		
 		if inside==1:
-			screensurf.blit(tileoutside, (xval, yval))
+			tilepost.blit(tileoutside, (xval, yval))
 	if tilestring=="X":
 		screensurf.blit(tilegreengoo, (xval, yval))
+		Qinside=0
 		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
+		
 		if inside==1:
-			screensurf.blit(tileoutside, (xval, yval))
+			tilepost.blit(tileoutside, (xval, yval))
 	if tilestring=="l":
 		screensurf.blit(tilelava, (xval, yval))
+		Qinside=0
 		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
+		
 		if inside==1:
-			screensurf.blit(tileoutside, (xval, yval))
+			tilepost.blit(tileoutside, (xval, yval))
 	if tilestring=="z":
 		screensurf.blit(tilesky1, (xval, yval))
+		Qinside=0
 		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
+		
 		if inside==1:
-			screensurf.blit(tileoutside, (xval, yval))
+			tilepost.blit(tileoutside, (xval, yval))
 	if tilestring=="D":
 		screensurf.blit(tiledarkstone, (xval, yval))
+		Qinside=0
 		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
+		
 		if inside==1:
-			screensurf.blit(tileoutside, (xval, yval))
+			tilepost.blit(tileoutside, (xval, yval))
 	if tilestring=="3":
 		screensurf.blit(tileexit, (xval, yval))
+		Qinside=0
 		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
+		
 		if inside==1:
-			screensurf.blit(tileoutside, (xval, yval))
+			tilepost.blit(tileoutside, (xval, yval))
 	if tilestring=="w":
 		screensurf.blit(tilewater, (xval, yval))
+		Qinside=0
 		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
+		
 		if inside==1:
-			screensurf.blit(tileoutside, (xval, yval))
+			tilepost.blit(tileoutside, (xval, yval))
 	if tilestring=="g":
 		screensurf.blit(tilegrass, (xval, yval))
+		Qinside=0
 		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
+		
 		#print "ping"
 		if inside==1:
-			screensurf.blit(tileoutside, (xval, yval))
+			tilepost.blit(tileoutside, (xval, yval))
 			#print "pong"
 	if tilestring=="s":
 		screensurf.blit(tilesand, (xval, yval))
+		Qinside=0
 		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
+		
 		#print "ping"
 		if inside==1:
-			screensurf.blit(tileoutside, (xval, yval))
+			tilepost.blit(tileoutside, (xval, yval))
 			#print "pong"
 	if tilestring=="d":
 		screensurf.blit(tiledock, (xval, yval))
+		Qinside=0
 		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
+		
 		if inside==1:
-			screensurf.blit(tileoutside, (xval, yval))
+			tilepost.blit(tileoutside, (xval, yval))
 	if tilestring=="B":
 		screensurf.blit(tilebrickpath, (xval, yval))
+		Qinside=0
 		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
+		
 		if inside==1:
-			screensurf.blit(tileoutside, (xval, yval))
+			tilepost.blit(tileoutside, (xval, yval))
 	if tilestring=="b":
 		screensurf.blit(tilebridge, (xval, yval))
+		Qinside=0
 		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
+		
 		if inside==1:
-			screensurf.blit(tileoutside, (xval, yval))
+			tilepost.blit(tileoutside, (xval, yval))
 	#"inside" tiles below.
 	if tilestring=="R":
 		
 		if inside==1:
-			screensurf.blit(tileinsidewall, (xval, yval))
+			screensurf.blit(tileinsidewall, (xval, (yval-8)))
+			Qinside=1
 		else:
-			screensurf.blit(tileroof1, (xval, yval))
-		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
+			screensurf.blit(tileroof1, (xval, (yval-8)))
+			Qinside=0
+		overlayscanB(xfoo, yfoo, xval, yval, drawfox, Qinside)
 	if tilestring=="c":
 		
 		if inside==1:
+			Qinside=1
 			screensurf.blit(tilecarpet, (xval, yval))
 		else:
-			screensurf.blit(tileroof1, (xval, yval))
-		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
+			Qinside=0
+			screensurf.blit(tileroof1, (xval, (yval-8)))
+		overlayscanB(xfoo, yfoo, xval, yval, drawfox, Qinside)
 	if tilestring=="Q":
 		
 		if inside==1:
-			screensurf.blit(tilegirderwall, (xval, yval))
+			Qinside=1
+			screensurf.blit(tilegirderwall, (xval, (yval-8)))
 		else:
-			screensurf.blit(tileroof1, (xval, yval))
-		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
+			Qinside=0
+			screensurf.blit(tileroof1, (xval, (yval-8)))
+		overlayscanB(xfoo, yfoo, xval, yval, drawfox, Qinside)
 	if tilestring=="P":
 		
 		if inside==1:
 			screensurf.blit(tilesteelfloor, (xval, yval))
+			Qinside=1
 		else:
-			screensurf.blit(tileroof1, (xval, yval))
-		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
+			Qinside=0
+			screensurf.blit(tileroof1, (xval, (yval-8)))
+		overlayscanB(xfoo, yfoo, xval, yval, drawfox, Qinside)
 	if tilestring=="Z":
 		
 		if inside==1:
 			screensurf.blit(tileconcretefloor, (xval, yval))
+			Qinside=1
 		else:
-			screensurf.blit(tileroof1, (xval, yval))
-		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
+			Qinside=0
+			screensurf.blit(tileroof1, (xval, (yval-8)))
+		overlayscanB(xfoo, yfoo, xval, yval, drawfox, Qinside)
 	if tilestring=="H":
 		
 		if inside==1:
 			screensurf.blit(tilehardwood, (xval, yval))
+			Qinside=1
 		else:
-			screensurf.blit(tileroof1, (xval, yval))
-		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
+			Qinside=0
+			screensurf.blit(tileroof1, (xval, (yval-8)))
+		overlayscanB(xfoo, yfoo, xval, yval, drawfox, Qinside)
 	
 	if tilestring=="r":
 		
 		if inside==1:
 			screensurf.blit(tileredcarpet, (xval, yval))
+			Qinside=1
 		else:
-			screensurf.blit(tileroof1, (xval, yval))
-		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
+			Qinside=0
+			screensurf.blit(tileroof1, (xval, (yval-8)))
+		overlayscanB(xfoo, yfoo, xval, yval, drawfox, Qinside)
 	if tilestring=="t":
 		
 		if inside==1:
 			screensurf.blit(tiletiledfloor, (xval, yval))
+			Qinside=1
 		else:
-			screensurf.blit(tileroof1, (xval, yval))
-		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
-		
+			Qinside=0
+			screensurf.blit(tileroof1, (xval, (yval-8)))
+		overlayscanB(xfoo, yfoo, xval, yval, drawfox, Qinside)
+	#screensurf.blit(tilepost, (0, 0))
 #new function to draw tile grid
 def tilegriddraw2():
 	xfoo=LEFTWARD3x
@@ -425,104 +514,110 @@ def tilegriddraw2():
 	xfoo=BACKWARDx
 	yfoo=BACKWARDy
 	tileblit(160, 260, BACKWARD, xfoo, yfoo)
+	xfoo=LEFTWARDZx
+	yfoo=LEFTWARDZy
+	tileblit(80, 340, LEFTWARDZ, xfoo, yfoo)
+	xfoo=RIGHTWARDZx
+	yfoo=RIGHTWARDZy
+	tileblit(240, 340, RIGHTWARDZ, xfoo, yfoo)
+	xfoo=FARLEFTZx
+	yfoo=FARLEFTZy
+	tileblit(0, 340, FARLEFTZ, xfoo, yfoo)
+	xfoo=FARRIGHTZx
+	yfoo=FARRIGHTZy
+	tileblit(320, 340, FARRIGHTZ, xfoo, yfoo)
+	xfoo=BACKWARDZx
+	yfoo=BACKWARDZy
+	tileblit(160, 340, BACKWARDZ, xfoo, yfoo)
+	
+	
+	#if viewfilterflg=="1":
+	#	screensurf.blit(viewfilter, (0, 20))
 	labelscan()
-	screensurf.blit(playerfuzzshad, (160, 180))
-	if inside==1:
-		if lastmove=="F":
-			screensurf.blit(tileplayer, (160, 180))
-		if lastmove=="B":
-			screensurf.blit(tileplayerB, (160, 180))
-		if lastmove=="L":
-			screensurf.blit(tileplayerL, (160, 180))
-		if lastmove=="R":
-			screensurf.blit(tileplayerR, (160, 180))
-	if inside==0:
-		yshad=(playy + 1)
-		shadblk=lookpoint(playx, yshad)
-		curblk=lookpoint(playx, playy)
-		if shadblk=="1" or shadblk=="R"  or shadblk=="r"  or shadblk=="c"   or shadblk=="t" or shadblk=="Q" or shadblk=="P" or shadblk=="Z" or shadblk=="H" or shadblk=="C":
-			if curblk!="1" and curblk!="R" and curblk!="c" and curblk!="t" and curblk!="r" and curblk!="Q" and curblk!="P" and curblk!="H" and curblk!="Z" and curblk!="C":
-				if lastmove=="F":
-					screensurf.blit(shadtileplayer, (160, 180))
-				if lastmove=="B":
-					screensurf.blit(shadtileplayerB, (160, 180))
-				if lastmove=="L":
-					screensurf.blit(shadtileplayerL, (160, 180))
-				if lastmove=="R":
-					screensurf.blit(shadtileplayerR, (160, 180))
-			else:
-				if lastmove=="F":
-					screensurf.blit(tileplayer, (160, 180))
-				if lastmove=="B":
-					screensurf.blit(tileplayerB, (160, 180))
-				if lastmove=="L":
-					screensurf.blit(tileplayerL, (160, 180))
-				if lastmove=="R":
-					screensurf.blit(tileplayerR, (160, 180))
-		else:
-			if lastmove=="F":
-				screensurf.blit(tileplayer, (160, 180))
-			if lastmove=="B":
-				screensurf.blit(tileplayerB, (160, 180))
-			if lastmove=="L":
-				screensurf.blit(tileplayerL, (160, 180))
-			if lastmove=="R":
-				screensurf.blit(tileplayerR, (160, 180))
-		
 
-def overlayblit(overlaytype):
+def ovrot(Qrot, Qgfx):
+	if Qrot=="1":
+		Qgfx=pygame.transform.rotate(Qgfx, 90)
+	if Qrot=="2":
+		Qgfx=pygame.transform.rotate(Qgfx, 180)
+	if Qrot=="3":
+		Qgfx=pygame.transform.rotate(Qgfx, 270)
+	return Qgfx
+
+def overlayblit(overlaytype, Qrotate="0"):
 	if overlaytype=="flowers":
-		return(ovflowers)
+		return(ovrot(Qrotate, ovflowers), 0)
 	if overlaytype=="2":
-		return(ovbuntowel)
+		return(ovrot(Qrotate, ovbuntowel), 0)
 	if overlaytype=="3":
-		return(ovbunraft)
+		return(ovrot(Qrotate, ovbunraft), 0)
 	if overlaytype=="4":
-		return(ovbunstand)
+		return(ovrot(Qrotate, ovbunstand), 0)
 	if overlaytype=="sink":
-		return(ovsink)
+		if Qrotate=="1":
+			return(ovsinkr1, 1)
+		if Qrotate=="2":
+			return(ovsinkr2, 1)
+		if Qrotate=="3":
+			return(ovsinkr3, 1)
+		else:
+			return(ovsink, 1) #TWEAKS DONE
 	if overlaytype=="counter":
-		return(ovcounter)
+		if Qrotate=="1":
+			return(ovcounterr1, 1)
+		if Qrotate=="2":
+			return(ovcounterr2, 1)
+		if Qrotate=="3":
+			return(ovcounterr3, 1)
+		else:
+			return(ovcounter, 1) #TWEAKS DONE
 	if overlaytype=="toilet":
-		return(ovtoilet)
+		if Qrotate=="1":
+			return(ovtoiletr1, 1)
+		if Qrotate=="2":
+			return(ovtoiletr2, 1)
+		if Qrotate=="3":
+			return(ovtoiletr3, 1)
+		else:
+			return(ovtoilet, 1) #TWEAKS DONE
 	if overlaytype=="crate":
-		return(ovcrate)
+		return(ovrot(Qrotate, ovcrate), 1)# TWEAKING DONE
 	if overlaytype=="cat1":
-		return(ovcat1)
+		return(ovrot(Qrotate, ovcat1), 0)
 	if overlaytype=="cat2":
-		return(ovcat2)
+		return(ovrot(Qrotate, ovcat2), 0)
 	if overlaytype=="cat3":
-		return(ovcat3)
+		return(ovrot(Qrotate, ovcat3), 0)
 	if overlaytype=="mouse1":
-		return(ovmouse1)
+		return(ovrot(Qrotate, ovmouse1), 0)
 	if overlaytype=="arrow":
-		return(ovarrow)
+		return(ovrot(Qrotate, ovarrow), 0)
 	if overlaytype=="signwater":
-		return(signwater)
+		return(ovrot(Qrotate, signwater), 0)
 	if overlaytype=="signlava":
-		return(signlava)
+		return(ovrot(Qrotate, signlava), 0)
 	if overlaytype=="signacid":
-		return(signacid)
+		return(ovrot(Qrotate, signacid), 0)
 	if overlaytype=="signbeach":
-		return(signbeach)
+		return(ovrot(Qrotate, signbeach), 0)
 	if overlaytype=="signdiner":
-		return(signdiner)
+		return(ovrot(Qrotate, signdiner), 0)
 	if overlaytype=="signpool":
-		return(signpool)
+		return(ovrot(Qrotate, signpool), 0)
 	if overlaytype=="signriver":
-		return(signriver)
+		return(ovrot(Qrotate, signriver), 0)
 	if overlaytype=="signtree":
-		return(signtree)
+		return(ovrot(Qrotate, signtree), 0)
 	if overlaytype=="signbun":
-		return(signbun)
+		return(ovrot(Qrotate, signbun), 0)
 	if overlaytype=="signinfo":
-		return(signinfo)
+		return(ovrot(Qrotate, signinfo), 0)
 	if overlaytype=="signtask":
-		return(signtask)
+		return(ovrot(Qrotate, signtask), 0)
 	if overlaytype=="NPCballoon":
-		return(NPCballoon)
+		return(ovrot(Qrotate, NPCballoon), 0)
 	if overlaytype=="bulletin":
-		return(ovbulletin)
+		return(ovrot(Qrotate, ovbulletin), 1) #needs separate rotate views and 8 pix offset
 	
 
 def overlayscan():
@@ -582,7 +677,75 @@ def overlayscan():
 			if QX==BACKWARDx and QY==BACKWARDy:
 				screensurf.blit(labtext, (160, 260))
 	
-def overlayscanB(xval, yval, xco, yco, drawfox=0):
+def overlayscanB(xval, yval, xco, yco, drawfox=0, Qinside=0):
+	
+	
+	for node in nodetag.findall("switch"):
+		if int(node.attrib.get('x'))==xval and int(node.attrib.get('y'))==yval:
+			keyid=node.attrib.get('keyid', "0")
+			Qvis=node.attrib.get('area', "b")
+			if Qvis=="i" and inside==1:
+				ovvis=1
+			elif Qvis=="o" and inside==0:
+				ovvis=1
+			elif Qvis=="b":
+				ovvis=1
+			else:
+				ovvis=0
+			
+			if keyid!="0" and ovvis==1:
+				if not keyid in keylist:
+					screensurf.blit(switchoff, (xco, yco))
+				elif keyid in keylist:
+					screensurf.blit(switchon, (xco, yco))
+	yshad=(yval + 1)
+	shadblk=lookpoint(xval, yshad)
+	curblk=lookpoint(xval, yval)
+	nextblock=lookpoint(xval, (yval - 1))
+	#depth hint engine:
+	if shadblk=="1" or shadblk=="R" or shadblk=="r"  or shadblk=="c"   or shadblk=="t" or shadblk=="C" or shadblk=="Q" or shadblk=="P" or shadblk=="Z" or shadblk=="H":
+		if curblk!="1" and curblk!="R" and curblk!="C" and curblk!="c" and curblk!="t" and curblk!="r" and curblk!="Q" and curblk!="P" and curblk!="Z" and curblk!="H":
+			if shadblk=="R" or shadblk=="Q":
+				screensurf.blit(hintbuildout, (xco, (yco-8)))
+			if shadblk=="1":
+				screensurf.blit(hinthedge, (xco, (yco-8)))
+			if shadblk=="C":
+				screensurf.blit(hintcobble, (xco, (yco-8)))
+			if shadblk=="r" or shadblk=="c" or shadblk=="t" or shadblk=="P" or shadblk=="Z" or shadblk=="H":
+				if inside==0:
+					screensurf.blit(hintdoor, (xco, (yco-8)))
+	if inside==1:
+		if shadblk=="R" or shadblk=="Q":
+			if curblk=="t":
+				screensurf.blit(hintbuild, (xco, (yco-8)))
+			if curblk=="c":
+				screensurf.blit(hintbuild, (xco, (yco-8)))
+			if curblk=="r":
+				screensurf.blit(hintbuild, (xco, (yco-8)))
+			if curblk=="P":
+				screensurf.blit(hintbuild, (xco, (yco-8)))
+			if curblk=="Z":
+				screensurf.blit(hintbuild, (xco, (yco-8)))
+			if curblk=="H":
+				screensurf.blit(hintbuildgreen, (xco, (yco-8)))
+	for node in nodetag.findall("gate"):
+		if int(node.attrib.get('x'))==xval and int(node.attrib.get('y'))==yval:
+			keyid=node.attrib.get('keyid', "0")
+			Qvis=node.attrib.get('area', "b")
+			if Qvis=="i" and inside==1:
+				ovvis=1
+			elif Qvis=="o" and inside==0:
+				ovvis=1
+			elif Qvis=="b":
+				ovvis=1
+			else:
+				ovvis=0
+			if ovvis==1:
+				if keyid!="0":
+					if keyid in keylist:
+						screensurf.blit(gateopen, (xco, (yco-8)))
+					else:
+						screensurf.blit(gateclosed, (xco, (yco-8)))
 	for node in nodetag.findall("overlay"):
 		xval=int(xval)
 		yval=int(yval)
@@ -608,55 +771,23 @@ def overlayscanB(xval, yval, xco, yco, drawfox=0):
 				ovvis=0
 		else:
 			ovvis=0
-		labtext=overlayblit(Qtype)
+		labtextQ=overlayblit(Qtype, Qrotate)
+		labtext=labtextQ[0]
+		offsetflg=labtextQ[1]
 		if ovvis==1:
 			if QX==xval and QY==yval:
-				if Qrotate=="1":
-					labtext=pygame.transform.rotate(labtext, 90)
-				if Qrotate=="2":
-					labtext=pygame.transform.rotate(labtext, 180)
-				if Qrotate=="3":
-					labtext=pygame.transform.rotate(labtext, 270)
-				screensurf.blit(labtext, (xco, yco))
-	for node in nodetag.findall("gate"):
-		if int(node.attrib.get('x'))==xval and int(node.attrib.get('y'))==yval:
-			keyid=node.attrib.get('keyid', "0")
-			Qvis=node.attrib.get('area', "b")
-			if Qvis=="i" and inside==1:
-				ovvis=1
-			elif Qvis=="o" and inside==0:
-				ovvis=1
-			elif Qvis=="b":
-				ovvis=1
-			else:
-				ovvis=0
-			if ovvis==1:
-				if keyid!="0":
-					if keyid in keylist:
-						screensurf.blit(gateopen, (xco, yco))
-					else:
-						screensurf.blit(gateclosed, (xco, yco))
-	for node in nodetag.findall("switch"):
-		if int(node.attrib.get('x'))==xval and int(node.attrib.get('y'))==yval:
-			keyid=node.attrib.get('keyid', "0")
-			Qvis=node.attrib.get('area', "b")
-			if Qvis=="i" and inside==1:
-				ovvis=1
-			elif Qvis=="o" and inside==0:
-				ovvis=1
-			elif Qvis=="b":
-				ovvis=1
-			else:
-				ovvis=0
-			
-			if keyid!="0" and ovvis==1:
-				if not keyid in keylist:
-					screensurf.blit(switchoff, (xco, yco))
-				elif keyid in keylist:
-					screensurf.blit(switchon, (xco, yco))
-	yshad=(yval + 1)
-	shadblk=lookpoint(xval, yshad)
-	curblk=lookpoint(xval, yval)
+				#if Qrotate=="1":
+				#	labtext=pygame.transform.rotate(labtext, 90)
+				#if Qrotate=="2":
+				#	labtext=pygame.transform.rotate(labtext, 180)
+				#if Qrotate=="3":
+				#	labtext=pygame.transform.rotate(labtext, 270)
+				if offsetflg==0:
+					screensurf.blit(labtext, (xco, yco))
+				else:
+					#print "foobar114"
+					screensurf.blit(labtext, (xco, (yco-8)))
+	#shadow engine
 	if 0==0:
 		if shadblk=="1" or shadblk=="R" or shadblk=="r"  or shadblk=="c"   or shadblk=="t" or shadblk=="C" or shadblk=="Q" or shadblk=="P" or shadblk=="Z" or shadblk=="H":
 			if curblk!="1" and curblk!="R" and curblk!="C" and curblk!="c" and curblk!="t" and curblk!="r" and curblk!="Q" and curblk!="P" and curblk!="Z" and curblk!="H" and curblk!="z":
@@ -667,6 +798,60 @@ def overlayscanB(xval, yval, xco, yco, drawfox=0):
 		elif shadblk!="w" and shadblk!="l" and shadblk!="X" and shadblk!="x":
 			if curblk=="w" or curblk=="l" or curblk=="X":
 				screensurf.blit(landshadow, (xco, yco))
+	
+	
+	if drawfox==1:
+		screensurf.blit(playerfuzzshad, (160, 180))
+		if inside==1:
+			if lastmove=="F":
+				screensurf.blit(tileplayer, (160, 180))
+			if lastmove=="B":
+				screensurf.blit(tileplayerB, (160, 180))
+			if lastmove=="L":
+				screensurf.blit(tileplayerL, (160, 180))
+			if lastmove=="R":
+				screensurf.blit(tileplayerR, (160, 180))
+		if inside==0:
+			yshad=(playy + 1)
+			shadblk=lookpoint(playx, yshad)
+			curblk=lookpoint(playx, playy)
+			if shadblk=="1" or shadblk=="R"  or shadblk=="r"  or shadblk=="c"   or shadblk=="t" or shadblk=="Q" or shadblk=="P" or shadblk=="Z" or shadblk=="H" or shadblk=="C":
+				if curblk!="1" and curblk!="R" and curblk!="c" and curblk!="t" and curblk!="r" and curblk!="Q" and curblk!="P" and curblk!="H" and curblk!="Z" and curblk!="C":
+					if lastmove=="F":
+						screensurf.blit(shadtileplayer, (160, 180))
+					if lastmove=="B":
+						screensurf.blit(shadtileplayerB, (160, 180))
+					if lastmove=="L":
+						screensurf.blit(shadtileplayerL, (160, 180))
+					if lastmove=="R":
+						screensurf.blit(shadtileplayerR, (160, 180))
+				else:
+					if lastmove=="F":
+						screensurf.blit(tileplayer, (160, 180))
+					if lastmove=="B":
+						screensurf.blit(tileplayerB, (160, 180))
+					if lastmove=="L":
+						screensurf.blit(tileplayerL, (160, 180))
+					if lastmove=="R":
+						screensurf.blit(tileplayerR, (160, 180))
+			else:
+				if lastmove=="F":
+					screensurf.blit(tileplayer, (160, 180))
+				if lastmove=="B":
+					screensurf.blit(tileplayerB, (160, 180))
+				if lastmove=="L":
+					screensurf.blit(tileplayerL, (160, 180))
+				if lastmove=="R":
+					screensurf.blit(tileplayerR, (160, 180))
+	if Qinside==0:
+		if nextblock=="c" or nextblock=="t" or nextblock=="r" or nextblock=="P" or nextblock=="Z" or nextblock=="H":
+			screensurf.blit(viewfiltertall, (xco, (yco-8)))
+			#if inside==1:
+			#	screensurf.blit(tileoutside, (xco, (yco-8)))
+		else:
+			screensurf.blit(viewfilter, (xco, (yco-8)))
+			#if inside==1:
+			#	screensurf.blit(tileoutside, (xco, (yco-8)))
 			
 	
 	
@@ -1045,6 +1230,18 @@ skiploop=1
 loopskipstop=0
 while gameend==('0'):
 	#POV coordinate determination
+	#stageZ
+	
+	POVbackxZ = playx
+	POVbackyZ = playy - 2
+	POVleftxZ = playx + 1
+	POVleftyZ = playy - 2
+	fPOVleftxZ = playx + 2
+	fPOVleftyZ = playy - 2
+	POVrightxZ = playx - 1
+	POVrightyZ = playy - 2
+	fPOVrightxZ = playx - 2
+	fPOVrightyZ = playy - 2
 	#stage0
 	POVleftx0 = playx + 1
 	POVlefty0 = playy - 1
@@ -1090,6 +1287,22 @@ while gameend==('0'):
 	POVforwardx3 = playx
 	POVforwardy3 = playy + 3
 	#POV point lookup
+	#stageZ
+	LEFTWARDZ = lookpoint(POVleftxZ, POVleftyZ)
+	LEFTWARDZx=POVleftxZ
+	LEFTWARDZy=POVleftyZ
+	RIGHTWARDZ = lookpoint(POVrightxZ, POVrightyZ)
+	RIGHTWARDZx=POVrightxZ
+	RIGHTWARDZy=POVrightyZ
+	FARLEFTZ = lookpoint(fPOVleftxZ, fPOVleftyZ)
+	FARLEFTZx=fPOVleftxZ
+	FARLEFTZy=fPOVleftyZ
+	FARRIGHTZ = lookpoint(fPOVrightxZ, fPOVrightyZ)
+	FARRIGHTZx=fPOVrightxZ
+	FARRIGHTZy=fPOVrightyZ
+	BACKWARDZ = lookpoint(POVbackxZ, POVbackyZ)
+	BACKWARDZx=POVbackxZ
+	BACKWARDZy=POVbackyZ
 	#stage0
 	LEFTWARD0 = lookpoint(POVleftx0, POVlefty0)
 	LEFTWARD0x=POVleftx0
@@ -1173,8 +1386,9 @@ while gameend==('0'):
 	#	print ("F3:" + FORWARD3 + " L3:" + LEFTWARD3 + " R3:" + RIGHTWARD3)
 	# 3 stage maze drawing function.
 	screensurf.fill((100, 120, 100))
-	screensurf.blit(gamebg, (0, 0))
 	tilegriddraw2()
+	screensurf.blit(gamebg, (0, 0))
+	
 	#if cantmoveflg==1:
 		#drawheadertext(CANTMOVE, 1)
 	if showlooktext==1:

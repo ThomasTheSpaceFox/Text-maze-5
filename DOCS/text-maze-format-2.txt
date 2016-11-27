@@ -1,6 +1,6 @@
 TEXT MAZE FORMAT 2 TECHNICAL DOCUMENTATION
 setup section:
-<setup defaulttile="z"> # see attributes subsection.
+<setup defaulttile="z" filter="1" a="140" r="0" g="10" b="130"> # see attributes subsection.
 		<mazename>Tutorial Level</mazename> # friendly name of maze. (used in upper hud)
 		<startposx>2</startposx> #x value of start position
 		<startposy>2</startposy>
@@ -10,6 +10,14 @@ setup section:
 optional attributes:
 defaulttile: set the default tile for when the graphical grid parser finds nothing.(a newline counts as "nothing") note how default tiles are always walls.
 keep this in mind.
+
+filter: enable outside RGBA filter (1=enable 0=disable)
+Note: works better for tinting. dark values might not work out well, as there is currently no "light nodes" of any sort. this may change.
+a: alpha value of filter
+r: red channel of filter
+g: green channel of filter
+b: blue channel of filter
+
 ------
 x=columns
 y=lines.

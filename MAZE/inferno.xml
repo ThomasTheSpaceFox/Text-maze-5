@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <main>
 	<!--note the optional defaulttile attribute-->
-	<setup defaulttile="l">
+	<setup defaulttile="l" filter="1" a="50" r="40" g="20" b="0">
 		<mazename>inferno: The manditory firey lava level.</mazename>
 		<startposx>2</startposx>
 		<startposy>2</startposy>

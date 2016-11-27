@@ -36,6 +36,11 @@ help: this text.
 (be sure to double check any manual changes!)"
 
 
+View Angle:
+The engine simulates 3D using an 8 pixel vertical offset between the floor and walls. 
+some overlays also have rotation specific graphics where perspective is needed. 
+
+
 Shadow casting:
 The engine features automatic shadow casting.
 walls assumed to be above ground hight, as well as ALL interior tiles,

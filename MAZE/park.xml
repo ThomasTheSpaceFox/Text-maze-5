@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <main>
-	<setup>
+	<setup  filter="0" a="50" r="245" g="245" b="255">
 		<mazename>The park</mazename>
 		<startposx>3</startposx>
 		<startposy>2</startposy>

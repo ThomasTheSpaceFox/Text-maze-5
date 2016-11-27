@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <main>
 	<!--note the optional defaulttile attribute-->
-	<setup defaulttile="z">
+	<setup defaulttile="z"  filter="1" a="50" r="140" g="90" b="20">
 		<mazename>Tutorial Level</mazename>
 		<startposx>2</startposx>
 		<startposy>2</startposy>
