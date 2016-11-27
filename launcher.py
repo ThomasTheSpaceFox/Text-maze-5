@@ -25,7 +25,7 @@ pygame.font.init()
 screensurfdex=pygame.display.set_mode((scrnx, scrny))
 screensurf=pygame.Surface((400, 400))
 titlescreen=pygame.image.load(os.path.join('TILE', 'titlescreen.png'))
-
+listbg=pygame.image.load(os.path.join('TILE', 'UIlistBG.png'))
 pygame.display.set_caption("Text-maze 5 launcher", "Text-maze 5 launcher")
 screensurf.fill((100, 120, 100))
 aboutbg=pygame.image.load(os.path.join('TILE', 'about-bg.png'))
@@ -48,16 +48,28 @@ def iteratelistB(listtoiterate, descriplist):
 		findcnt += 1
 	selectmade=0
 	listhighnum=1
+	listbgbox=listbg.get_rect()
+	listbgbox.centerx = screensurf.get_rect().centerx
+	listbgbox.centery = screensurf.get_rect().centery
+	screensurf.blit(listbg, listbgbox)
+	
 	screensurfbak=screensurf.copy()
+	texhigoffset=0
 	while selectmade!=1:
-		
+		listbound=pygame.Surface((170, 248), SRCALPHA)
+		listboundbox=listbound.get_rect()
+		listboundbox.centerx = screensurf.get_rect().centerx
+		listboundbox.centery = screensurf.get_rect().centery
 		if listhighnum<=0:
 			listhighnum=findcnt
+			texhigoffset=(findcnt*14)-14
 		elif listhighnum>findcnt:
 			listhighnum=1
-			
+			texhigoffset=0
 		#starting point for menu
-		texhigcnt=24
+		texhigcnt=80
+		
+		texhigcnt-=texhigoffset
 		#separation between each line of text's origin
 		texhigjump=14
 		#menu line count variable. should be set to 1 here.
@@ -65,17 +77,20 @@ def iteratelistB(listtoiterate, descriplist):
 		screensurf.blit(screensurfbak, (0, 0))
 		for indx in listtoiterate:
 			if indlcnt==listhighnum:
-				textit=simplefont.render(("-> " + indx + " <-"), True, (0, 0, 0), (255, 255, 255))
+				textit=simplefont.render(("-> " + indx + " <-"), True, (255, 255, 255))
 				popuptext(descriplist[(indlcnt-1)])
+				
+				
 			else:
-				textit=simplefont.render(indx, True, (255, 255, 255), (0, 0, 0))
+				textit=simplefont.render(indx, True, (255, 255, 255), (132, 135, 152))
 			textitbox=textit.get_rect()
-			textitbox.centerx = screensurf.get_rect().centerx
+			textitbox.centerx = listbound.get_rect().centerx
 			textitbox.centery = texhigcnt
-			screensurf.blit(textit, textitbox)
+			listbound.blit(textit, textitbox)
 			
 			texhigcnt += texhigjump
 			indlcnt += 1
+		screensurf.blit(listbound, listboundbox)
 		screensurfQ=pygame.transform.scale(screensurf, (scrnx, scrny))
 		screensurfdex.blit(screensurfQ, (0, 0))
 		pygame.display.update()
@@ -87,9 +102,11 @@ def iteratelistB(listtoiterate, descriplist):
 			for event in pygame.event.get():
 				if event.type == KEYDOWN and event.key == K_UP:
 					listhighnum -= 1
+					texhigoffset -= 14
 					evhappenflg=1
 				if event.type == KEYDOWN and event.key == K_DOWN:
 					listhighnum += 1
+					texhigoffset += 14
 					evhappenflg=1
 				if event.type == KEYDOWN and event.key == K_RETURN:
 					ixreturn=1

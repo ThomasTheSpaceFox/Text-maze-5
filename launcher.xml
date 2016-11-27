@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <main>
-	<!--Keep categories at a max of 22, and category items at a max of 22-->
+	<!--New scrolling menu system. number of categories and category items no longer limited.-->
 	<cat label="sample levels" desc="various sample levels.">
 		<item label="Tutorial" desc="Learn The basics">sample.xml</item>
 		<item label="The Park" desc="A strange seaside park.">park.xml</item>
