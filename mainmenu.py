@@ -57,6 +57,13 @@ titlescreenbox.centery = ((screensurf.get_rect().centery) - 90)
 screensurf.blit(titlebg, (0, 0))
 screensurf.blit(titlescreen, (0, 20))
 
+def popuptextMENU(textto):
+	text = simplefont.render(textto, True, (255, 255, 255), (0, 0, 0))
+	textbox = text.get_rect()
+	textbox.centerx=screensurf.get_rect().centerx
+	textbox.centery=390
+	screensurf.blit(text, textbox)
+
 
 
 pygame.display.set_caption("Text-maze 5 menu", "Text-maze 5")
@@ -64,6 +71,8 @@ menuhighnum=1  #integer used to track the highlighted menu item.
 menusel="null"
 simplefontB = pygame.font.SysFont(None, 22)
 simplefont = pygame.font.SysFont(None, 16) #define a simple font from the system fonts
+
+popuptextMENU("Text Maze v5.0 (c) 2015-2016 Thomas Leathers")
 ixreturn=0
 while menusel!="quit":
 	#does things that need done upon returning to the menu from an option.
@@ -74,6 +83,7 @@ while menusel!="quit":
 		screensurf.blit(titlebg, (0, 0))
 		#screensurf.blit(titlescreen, titlescreenbox)
 		screensurf.blit(titlescreen, (0, 20))
+		popuptextMENU("Text Maze v5.0 (c) 2015-2016 Thomas Leathers")
 		ixreturn=0
 	menucnt=1
 	evhappenflg=0

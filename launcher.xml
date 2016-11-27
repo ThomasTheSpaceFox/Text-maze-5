@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <main>
 	<!--Keep categories at a max of 22, and category items at a max of 22-->
-	<cat label="sample levels">
-		<item label="Tutorial">sample.xml</item>
-		<item label="The Park">park.xml</item>
+	<cat label="sample levels" desc="various sample levels.">
+		<item label="Tutorial" desc="Learn The basics">sample.xml</item>
+		<item label="The Park" desc="A strange seaside park.">park.xml</item>
 	</cat>
 </main>

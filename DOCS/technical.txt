@@ -8,7 +8,7 @@ DEBUG MODE:
 you can start any level in debug mode by using testlaunch.py
 ex on Linux: "./testlaunch.py MAZE/sample.xml"
 
-mainmenu.py and launcher.py NO NOT start the engine in debug mode.
+mainmenu.py and launcher.py DO NOT start the engine in debug mode.
 using debug mode:
 to walk through walls:
 

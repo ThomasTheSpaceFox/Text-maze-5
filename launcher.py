@@ -23,23 +23,32 @@ else:
 pygame.display.init()
 pygame.font.init()
 screensurfdex=pygame.display.set_mode((scrnx, scrny))
-screensurf=pygame.Surface((400, 370))
+screensurf=pygame.Surface((400, 400))
+titlescreen=pygame.image.load(os.path.join('TILE', 'titlescreen.png'))
 
 pygame.display.set_caption("Text-maze 5 launcher", "Text-maze 5 launcher")
 screensurf.fill((100, 120, 100))
 aboutbg=pygame.image.load(os.path.join('TILE', 'about-bg.png'))
 titlebg=pygame.image.load(os.path.join('TILE', 'game-bg.png'))
+simplefontB = pygame.font.SysFont(None, 22)
 screensurf.blit(aboutbg, (0, 20))
 screensurf.blit(titlebg, (0, 0))
 simplefont = pygame.font.SysFont(None, 16)
 
-def iteratelistB(listtoiterate):
+def popuptext(textto):
+	text = simplefontB.render(textto, True, (255, 255, 255), (0, 0, 0))
+	textbox = text.get_rect()
+	textbox.centerx=screensurf.get_rect().centerx
+	textbox.centery=380
+	screensurf.blit(text, textbox)
+
+def iteratelistB(listtoiterate, descriplist):
 	findcnt=0
 	for flx in listtoiterate:
 		findcnt += 1
 	selectmade=0
 	listhighnum=1
-	
+	screensurfbak=screensurf.copy()
 	while selectmade!=1:
 		
 		if listhighnum<=0:
@@ -48,17 +57,23 @@ def iteratelistB(listtoiterate):
 			listhighnum=1
 			
 		#starting point for menu
-		texhigcnt=20
+		texhigcnt=24
 		#separation between each line of text's origin
 		texhigjump=14
 		#menu line count variable. should be set to 1 here.
 		indlcnt=1
+		screensurf.blit(screensurfbak, (0, 0))
 		for indx in listtoiterate:
 			if indlcnt==listhighnum:
-				textit=simplefont.render(indx, True, (0, 0, 0), (255, 255, 255))
+				textit=simplefont.render(("-> " + indx + " <-"), True, (0, 0, 0), (255, 255, 255))
+				popuptext(descriplist[(indlcnt-1)])
 			else:
 				textit=simplefont.render(indx, True, (255, 255, 255), (0, 0, 0))
-			screensurf.blit(textit, (0, texhigcnt))
+			textitbox=textit.get_rect()
+			textitbox.centerx = screensurf.get_rect().centerx
+			textitbox.centery = texhigcnt
+			screensurf.blit(textit, textitbox)
+			
 			texhigcnt += texhigjump
 			indlcnt += 1
 		screensurfQ=pygame.transform.scale(screensurf, (scrnx, scrny))
@@ -85,10 +100,13 @@ def trivchooser():
 	trivlisttree = ET.parse("launcher.xml")
 	trivlistroot = trivlisttree.getroot()
 	catlist=(["Main Menu"])
+	catdesclist=(["Return to the Main Menu"])
 	for fdat in (trivlistroot.findall("cat")):
 		catlabel=(fdat.attrib.get("label"))
+		catdesc=(fdat.attrib.get("desc"))
 		#print fline
 		catlist.extend([catlabel])
+		catdesclist.extend([catdesc])
 		catpic=0
 	while catpic!=1:
 		screensurf.blit(aboutbg, (0, 20))
@@ -96,7 +114,7 @@ def trivchooser():
 		#drawsmalltitle()
 		categscreentext=simplefont.render("Category Selection", True, (0, 0, 0))
 		screensurf.blit(categscreentext, (0, 0))
-		catpic=iteratelistB(catlist)
+		catpic=iteratelistB(catlist, catdesclist)
 		catcnt=1
 		if catpic!=1:
 			for fdat in (trivlistroot.findall("cat")):
@@ -105,19 +123,22 @@ def trivchooser():
 					categheadtext=simplefont.render(catlabel, True, (0, 0, 0))
 					
 					itemlist=["categories"]
+					descriptlist=["return to categories"]
 					for qdat in fdat.findall("item"):
 						itemfile=qdat.text
 						itemfile=os.path.join("MAZE", itemfile)
 						#itemlabel=getlabels(itemfile)
 						itemlabel=qdat.attrib.get("label")
+						itemdesc=qdat.attrib.get("desc")
 						itemlist.extend([itemlabel])
+						descriptlist.extend([itemdesc])
 					itempic=0
 					while itempic!=1:
 						screensurf.blit(aboutbg, (0, 20))
 						screensurf.blit(titlebg, (0, 0))
 						#drawsmalltitle()
 						screensurf.blit(categheadtext, (0, 0))
-						itempic=iteratelistB(itemlist)
+						itempic=iteratelistB(itemlist, descriptlist)
 						itemcnt=1
 						if itempic!=1:
 							for qdat in fdat.findall("item"):
@@ -130,6 +151,13 @@ def trivchooser():
 				catcnt += 1
 mazefilepathX=trivchooser()
 if mazefilepathX!=None:
+	screensurf.blit(titlebg, (0, 0))
+	screensurf.blit(titlescreen, (0, 20))
+	popuptext("Loading...")
+	time.sleep(0.1)
+	screensurfQ=pygame.transform.scale(screensurf, (scrnx, scrny))
+	screensurfdex.blit(screensurfQ, (0, 0))
+	pygame.display.update()
 	mazefilepath=mazefilepathX
 	execfile("MAZE-ENG2.py")
 else:
