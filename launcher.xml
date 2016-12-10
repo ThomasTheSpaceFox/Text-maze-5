@@ -5,4 +5,6 @@
 		<item label="Tutorial" desc="Learn The basics">sample.xml</item>
 		<item label="The Park" desc="A strange seaside park.">park.xml</item>
 	</cat>
+	<cat label="TEST" desc="A TEST">
+	</cat>
 </main>

@@ -20,9 +20,15 @@ else:
 	print ("Global variable: 'scrny' not present. using default.")
 	scrny=400
 
-#prep subprograms
-scengcore=open('MAZE-ENG2.py', 'r')
-exengcore=compile(scengcore.read(), 'MAZE-ENG2.py', 'exec')
+#load conf.xml
+mainconf = ET.parse("conf.xml")
+mainconfroot = mainconf.getroot()
+animtag=mainconfroot.find("anim")
+gfxtag=mainconfroot.find("gfx")
+sndtag=mainconfroot.find("sound")
+musicflg=int(sndtag.attrib.get("music", "1"))
+movescrlflg=int(animtag.attrib.get("smoothscrl", "1"))
+rgbafilterflg=int(gfxtag.attrib.get("rgbafilter", "1"))
 
 pygame.display.init()
 pygame.font.init()
@@ -30,7 +36,7 @@ screensurfdex=pygame.display.set_mode((scrnx, scrny))
 screensurf=pygame.Surface((400, 400))
 titlescreen=pygame.image.load(os.path.join('TILE', 'titlescreen.png'))
 listbg=pygame.image.load(os.path.join('TILE', 'UIlistBG.png'))
-pygame.display.set_caption("Text-maze 5 launcher", "Text-maze 5 launcher")
+pygame.display.set_caption("Text-maze 5 options menu", "Text-maze 5 options menu")
 screensurf.fill((100, 120, 100))
 aboutbg=pygame.image.load(os.path.join('TILE', 'about-bg.png'))
 titlebg=pygame.image.load(os.path.join('TILE', 'game-bg.png'))
@@ -116,73 +122,51 @@ def iteratelistB(listtoiterate, descriplist):
 					ixreturn=1
 					evhappenflg=1
 					return(listhighnum)
-
-def trivchooser():
-	trivlisttree = ET.parse("launcher.xml")
-	trivlistroot = trivlisttree.getroot()
-	catlist=(["Main Menu"])
-	catdesclist=(["Return to the Main Menu"])
-	for fdat in (trivlistroot.findall("cat")):
-		catlabel=(fdat.attrib.get("label"))
-		catdesc=(fdat.attrib.get("desc"))
-		#print fline
-		catlist.extend([catlabel])
-		catdesclist.extend([catdesc])
-		catpic=0
-	while catpic!=1:
-		screensurf.blit(aboutbg, (0, 20))
-		screensurf.blit(titlebg, (0, 0))
-		#drawsmalltitle()
-		categscreentext=simplefont.render("Category Selection", True, (0, 0, 0))
-		screensurf.blit(categscreentext, (0, 0))
-		catpic=iteratelistB(catlist, catdesclist)
-		catcnt=1
-		if catpic!=1:
-			for fdat in (trivlistroot.findall("cat")):
-				if catcnt==(catpic - 1):
-					catlabel=(fdat.attrib.get("label"))
-					categheadtext=simplefont.render(catlabel, True, (0, 0, 0))
 					
-					itemlist=["categories"]
-					descriptlist=["return to categories"]
-					for qdat in fdat.findall("item"):
-						itemfile=qdat.text
-						itemfile=os.path.join("MAZE", itemfile)
-						#itemlabel=getlabels(itemfile)
-						itemlabel=qdat.attrib.get("label")
-						itemdesc=qdat.attrib.get("desc")
-						itemlist.extend([itemlabel])
-						descriptlist.extend([itemdesc])
-					itempic=0
-					while itempic!=1:
-						screensurf.blit(aboutbg, (0, 20))
-						screensurf.blit(titlebg, (0, 0))
-						#drawsmalltitle()
-						screensurf.blit(categheadtext, (0, 0))
-						itempic=iteratelistB(itemlist, descriptlist)
-						itemcnt=1
-						if itempic!=1:
-							for qdat in fdat.findall("item"):
-								itemfile=qdat.text
-								itemfile=os.path.join("MAZE", itemfile)
-								if itemcnt==(itempic - 1):
-									return(itemfile)
-								itemcnt +=1
-					
-				catcnt += 1
-mazefilepathX=trivchooser()
-if mazefilepathX!=None:
+				#catcnt += 1
+optpick=0
+while optpick!=1:
+	if rgbafilterflg==1:
+		RGBFILDIP="RGB tinting engine (currently on)"
+	else:
+		RGBFILDIP="RGB tinting engine (currently off)"
+	if movescrlflg==1:
+		SMSCDIP="movement scrolling effect (currently on)"
+	else:
+		SMSCDIP="movement scrolling effect (currently off)"
+	
+	if musicflg==1:
+		MUSDIP="background music (currently on)"
+	else:
+		MUSDIP="background music (currently off)"
+	optdesc=('return to main menu', RGBFILDIP, SMSCDIP, MUSDIP)
+	optlist=("main menu", "RGB filter", "Smooth movement scrolling", "Music")
+	screensurf.blit(aboutbg, (0, 20))
 	screensurf.blit(titlebg, (0, 0))
-	screensurf.blit(titlescreen, (0, 20))
-	popuptext("Loading...")
-	time.sleep(0.1)
-	screensurfQ=pygame.transform.scale(screensurf, (scrnx, scrny))
-	screensurfdex.blit(screensurfQ, (0, 0))
-	pygame.display.update()
-	mazefilepath=mazefilepathX
-	exec(exengcore)
-else:
-	print "Returning to main menu."
-
+	optpick=iteratelistB(optlist, optdesc)
+	if optpick==2:
+		if rgbafilterflg==1:
+			rgbafilterflg=0
+			gfxtag.set("rgbafilter", "0")
+		else:
+			rgbafilterflg=1
+			gfxtag.set("rgbafilter", "1")
+	if optpick==3:
+		if movescrlflg==1:
+			movescrlflg=0
+			animtag.set("smoothscrl", "0")
+		else:
+			movescrlflg=1
+			animtag.set("smoothscrl", "1")
+	if optpick==4:
+		if musicflg==1:
+			sndtag.set("music", "0")
+			musicflg=0
+		else:
+			sndtag.set("music", "1")
+			musicflg=1
+print "writing conf.xml"
+mainconf.write("conf.xml")
+print "returning to menu"
 
 

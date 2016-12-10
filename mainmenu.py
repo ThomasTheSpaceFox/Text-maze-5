@@ -6,10 +6,7 @@ from pygame.locals import *
 import xml.etree.ElementTree as ET
 #some notes
 
-#this is the maze selection program/main menu for Text-maze 4. the mazes are semi-softcoded. 
-#what i mean is the maze engine itself can be executed from another python program that
-#points it to a *.MAZE file using a global variable: "mazefilepath"
-#see maze-series.py's comments for more info on this.
+
 scrnx=400
 scrny=400
 #some variables used in the menu list.
@@ -24,7 +21,7 @@ screensurf=screensurfdex.copy()
 #(as when Text-maze-4.py is run from here the music is already playing)
 MENUFLG=1
 #list of menu options.
-mainlist=(menitm1, "about", "quit")
+mainlist=(menitm1, "about", "options", "quit")
 #find out number of options in menu. (used by the menu selection wrap-around)
 findcnt=0
 for flx in mainlist:
@@ -37,7 +34,7 @@ titlebg=pygame.image.load(os.path.join('TILE', 'game-bg.png'))
 #init the mixer and start the music
 pygame.mixer.init()
 pygame.mixer.music.load(os.path.join('AUDIO', 'vg-mus-2_spooky-hall.ogg'))
-pygame.mixer.music.play(-1)
+
 
 
 print ('Text-maze 5 maze selection menu')
@@ -45,8 +42,28 @@ print ('Text-maze 5 maze selection menu')
 pygame.display.init()
 pygame.font.init()
 
+#prep subcode scripts
+sclaunch=open('launcher.py', 'r')
+exlaunch=compile(sclaunch.read(), 'launcher.py', 'exec')
+scabt=open('about.py', 'r')
+exabt=compile(scabt.read(), 'about.py', 'exec')
+scopt=open('options.py', 'r')
+exopt=compile(scopt.read(), 'options.py', 'exec')
+#load conf.xml
+mainconf = ET.parse("conf.xml")
+mainconfroot = mainconf.getroot()
+animtag=mainconfroot.find("anim")
+gfxtag=mainconfroot.find("gfx")
+sndtag=mainconfroot.find("sound")
+musicflg=int(sndtag.attrib.get("music", "1"))
+movescrlflg=int(animtag.attrib.get("smoothscrl", "1"))
+rgbafilterflg=int(gfxtag.attrib.get("rgbafilter", "1"))
+scrx=int(gfxtag.attrib.get("scrx", "400"))
+scry=int(gfxtag.attrib.get("scry", "400"))
+CONFLOADED=1
+if musicflg==1:
+	pygame.mixer.music.play(-1)
 #set up display
-
 screensurfdex=pygame.display.set_mode((scrnx, scrny), RESIZABLE)
 screensurf=screensurfdex.copy()
 screensurf.fill((100, 120, 100))
@@ -56,7 +73,12 @@ titlescreenbox.centerx = screensurf.get_rect().centerx
 titlescreenbox.centery = ((screensurf.get_rect().centery) - 90)
 screensurf.blit(titlebg, (0, 0))
 screensurf.blit(titlescreen, (0, 20))
-
+scrnx=scrx
+scrny=scry
+screensurfdex=pygame.display.set_mode((scrnx, scrny), RESIZABLE)
+screensurfQ=pygame.transform.scale(screensurf, (scrnx, scrny))
+screensurfdex.blit(screensurfQ, (0, 0))
+pygame.display.update()
 def popuptextMENU(textto):
 	text = simplefont.render(textto, True, (255, 255, 255), (0, 0, 0))
 	textbox = text.get_rect()
@@ -161,7 +183,9 @@ while menusel!="quit":
 				if indxB==menitm1:
 					#MAZEIS='sample.xml'
 					#mazefilepath=(os.path.join('MAZE', MAZEIS)) #global variable used by Text-maze-4.py
-					execfile('launcher.py')
+					
+					exec(exlaunch)
+					
 				#if indxB==menitm2:
 					#MAZEIS='sample.MAZE'
 					#mazefilepath=(os.path.join('MAZE', MAZEIS))
@@ -173,8 +197,12 @@ while menusel!="quit":
 				if indxB=='quit':
 					menusel="quit"
 				if indxB=='about':
-					execfile('about.py')
+					exec(exabt)
+				if indxB=='options':
+					exec(exopt)
 			indlcnt2 += 1
 	pygame.display.update()
-
-
+print "saving conf.xml"
+gfxtag.set("scrx", str(scrnx))
+gfxtag.set("scry", str(scrny))
+mainconf.write("conf.xml")

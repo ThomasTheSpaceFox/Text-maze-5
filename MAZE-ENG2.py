@@ -61,7 +61,15 @@ else:
 	print ("Global variable: 'scrny' not present. using default.")
 	scrny=400
 
-
+#load conf.xml
+mainconf = ET.parse("conf.xml")
+mainconfroot = mainconf.getroot()
+animtag=mainconfroot.find("anim")
+gfxtag=mainconfroot.find("gfx")
+sndtag=mainconfroot.find("sound")
+musicflg=int(sndtag.attrib.get("music", "1"))
+movescrlflg=int(animtag.attrib.get("smoothscrl", "1"))
+rgbafilterflg=int(gfxtag.attrib.get("rgbafilter", "1"))
 
 def debugmsg(msg, printplaypos=0):
 	if DEBUG==1:
@@ -78,7 +86,8 @@ pygame.mixer.init()
 if MENUFLG==0:
 	pygame.mixer.music.load(os.path.join('AUDIO', 'vg-mus-2_spooky-hall.ogg'))
 	#pygame.mixer.music.load(os.path.join('AUDIO', 'vgtrack1.mid'))
-	pygame.mixer.music.play(-1)
+	if musicflg==1:
+		pygame.mixer.music.play(-1)
 stepfx=pygame.mixer.Sound(os.path.join('AUDIO', 'step.ogg'))
 mipfx=pygame.mixer.Sound(os.path.join('AUDIO', 'mip.ogg'))
 switchonfx=pygame.mixer.Sound(os.path.join('AUDIO', 'switchon.ogg'))
@@ -137,8 +146,11 @@ tilesteelfloor=pygame.image.load(os.path.join('TILE', 'steelfloor.png'))
 tilegirderwall=pygame.image.load(os.path.join('TILE', 'girderwall.png'))
 
 #skytiles
+#sky1
 tilesky1=pygame.image.load(os.path.join('TILE', 'sky1.png'))
-
+tilesky1x=pygame.image.load(os.path.join('TILE', 'sky1x.png'))
+tilesky1y=pygame.image.load(os.path.join('TILE', 'sky1y.png'))
+tilesky1b=pygame.image.load(os.path.join('TILE', 'sky1b.png'))
 #overlay graphics
 ovflowers=pygame.image.load(os.path.join('TILE', 'ovflowers.png'))
 ovcrate=pygame.image.load(os.path.join('TILE', 'ovcrate.png'))
@@ -215,6 +227,10 @@ hudfacecasual=pygame.image.load(os.path.join('TILE', 'hudfacecasual.png'))
 hudfacebored=pygame.image.load(os.path.join('TILE', 'hudfacebored.png'))
 
 winscreen=pygame.image.load(os.path.join('TILE', 'winscreen.png'))
+#scroll masks
+hscrollmask=pygame.image.load(os.path.join('TILE', 'hscrollmask.png'))
+vscrollmask=pygame.image.load(os.path.join('TILE', 'vscrollmask.png'))
+
 
 # *.MAZE file data loader
 print ("loading data from:" + mazefilepath)
@@ -311,6 +327,14 @@ def tileblit(xval, yval, tilestring, xfoo, yfoo, drawfox=0):
 		if inside==1:
 			tilepost.blit(tileoutside, (xval, yval))
 	if tilestring=="z":
+		#if playx%2!=0 and playy%2!=0:
+			#screensurf.blit(tilesky1b, (xval, yval))
+		#elif playx%2!=0:
+			#screensurf.blit(tilesky1x, (xval, yval))
+		#elif playy%2!=0:
+			#screensurf.blit(tilesky1y, (xval, yval))
+		#else:
+			#screensurf.blit(tilesky1, (xval, yval))
 		screensurf.blit(tilesky1, (xval, yval))
 		Qinside=0
 		overlayscanB(xfoo, yfoo, xval, yval, drawfox)
@@ -843,7 +867,7 @@ def overlayscanB(xval, yval, xco, yco, drawfox=0, Qinside=0):
 					screensurf.blit(tileplayerL, (160, 180))
 				if lastmove=="R":
 					screensurf.blit(tileplayerR, (160, 180))
-	if Qinside==0:
+	if Qinside==0 and rgbafilterflg==1:
 		if nextblock=="c" or nextblock=="t" or nextblock=="r" or nextblock=="P" or nextblock=="Z" or nextblock=="H":
 			screensurf.blit(viewfiltertall, (xco, (yco-8)))
 			#if inside==1:
@@ -1116,6 +1140,8 @@ def drawheadertext(textto, linemode):
 #main input reading function
 showlooktext=0
 def keyread():
+	keyscantime=0
+	foob=0
 	while True:
 		time.sleep(.1)
 		for event in pygame.event.get():
@@ -1167,6 +1193,15 @@ def keyread():
 				return("l")
 			if event.type == KEYDOWN and event.key == K_t:
 				return("t")
+			if keyscantime==20:
+				return("redraw")
+			if event.type == KEYDOWN:
+				keyscantime +=1
+				foob=1
+		if keyscantime==20:
+			return("redraw")
+		if foob==0:
+			keyscantime +=1
 
 def popuptext(textto):
 	text = simplefontB.render(textto, True, (255, 255, 255), (0, 0, 0))
@@ -1211,7 +1246,79 @@ def convdup(convtext):
 			#print "pong"
 	return(fodchange)
 
+#paralax used by sky tiles
+#dont use both axis at same time!
+def surfscroll(texture, xoff, yoff):
+	parjump=20
+	tempsurf=pygame.Surface((80, 80))
+	tempsurf.blit(texture, (0,0))
+	if xoff=="+":
+		tempsurf.blit(texture, (-60,0))
+		tempsurf.blit(texture, (20,0))
+	if xoff=="-":
+		tempsurf.blit(texture, (-20,0))
+		tempsurf.blit(texture, (60,0))
+	if yoff=="+":
+		tempsurf.blit(texture, (0, -60))
+		tempsurf.blit(texture, (0, 20))
+	if yoff=="-":
+		tempsurf.blit(texture, (0, -20))
+		tempsurf.blit(texture, (0, 60))
+	return tempsurf
 
+def cloudflow(texture, xoff, yoff):
+	parjump=10
+	tempsurf=pygame.Surface((80, 80))
+	tempsurf.blit(texture, (0,0))
+	if xoff=="+":
+		tempsurf.blit(texture, (-70,0))
+		tempsurf.blit(texture, (10,0))
+	if xoff=="-":
+		tempsurf.blit(texture, (-10,0))
+		tempsurf.blit(texture, (70,0))
+	if yoff=="+":
+		tempsurf.blit(texture, (0, -70))
+		tempsurf.blit(texture, (0, 10))
+	if yoff=="-":
+		tempsurf.blit(texture, (0, -10))
+		tempsurf.blit(texture, (0, 70))
+	return tempsurf
+
+def fluidflow(texture, xoff, yoff):
+	parjump=3
+	tempsurf=pygame.Surface((80, 80))
+	tempsurf.blit(texture, (0,0))
+	if xoff=="+":
+		tempsurf.blit(texture, (-77,0))
+		tempsurf.blit(texture, (3,0))
+	if xoff=="-":
+		tempsurf.blit(texture, (-3,0))
+		tempsurf.blit(texture, (77,0))
+	if yoff=="+":
+		tempsurf.blit(texture, (0, -77))
+		tempsurf.blit(texture, (0, 3))
+	if yoff=="-":
+		tempsurf.blit(texture, (0, -3))
+		tempsurf.blit(texture, (0, 77))
+	return tempsurf
+
+def fluidscroll(texture, xoff, yoff):
+	parjump=2
+	tempsurf=pygame.Surface((80, 80))
+	tempsurf.blit(texture, (0,0))
+	if xoff=="+":
+		tempsurf.blit(texture, (-79,0))
+		tempsurf.blit(texture, (1,0))
+	if xoff=="-":
+		tempsurf.blit(texture, (-1,0))
+		tempsurf.blit(texture, (79,0))
+	if yoff=="+":
+		tempsurf.blit(texture, (0, -79))
+		tempsurf.blit(texture, (0, 1))
+	if yoff=="-":
+		tempsurf.blit(texture, (0, -1))
+		tempsurf.blit(texture, (0, 79))
+	return tempsurf
 #old test data
 #if lookpoint(2, 2)==('0'):
 #	print ('blah')
@@ -1227,7 +1334,9 @@ points=0
 keylist=["null"]
 keybak=["null"]
 skiploop=1
+usrentry="null"
 loopskipstop=0
+hudfacesel=hudfacecasual
 while gameend==('0'):
 	#POV coordinate determination
 	#stageZ
@@ -1379,12 +1488,65 @@ while gameend==('0'):
 		print "nochange intereor flag"
 	else:
 		inside=0
+	
+	#paralax skybelow scrollers
+	if cantmoveflg==0:
+		
+		if usrentry==LEFTWORDBIND:
+			tilesky1=surfscroll(tilesky1, "+", "0")
+			tilelava=fluidscroll(tilelava, "+", "0")
+			tilewater=fluidscroll(tilewater, "+", "0")
+			tilegreengoo=fluidscroll(tilegreengoo, "+", "0")
+		if usrentry==RIGHTWODBIND:
+			tilesky1=surfscroll(tilesky1, "-", "0")
+			tilelava=fluidscroll(tilelava, "-", "0")
+			tilewater=fluidscroll(tilewater, "-", "0")
+			tilegreengoo=fluidscroll(tilegreengoo, "-", "0")
+		if usrentry==FORWARDWORDBIND:
+			tilesky1=surfscroll(tilesky1, "0", "+")
+			tilelava=fluidscroll(tilelava, "0", "+")
+			tilewater=fluidscroll(tilewater, "0", "+")
+			tilegreengoo=fluidscroll(tilegreengoo, "0", "+")
+		if usrentry==BACKWARDWORDBIND:
+			tilesky1=surfscroll(tilesky1, "0", "-")
+			tilelava=fluidscroll(tilelava, "0", "-")
+			tilewater=fluidscroll(tilewater, "0", "-")
+			tilegreengoo=fluidscroll(tilegreengoo, "0", "-")
+	
+	
 	#if debugset==('1'):
 	#	print ("F:" + FORWARD + " B:" + BACKWARD)
 	#	print ("L:" + LEFTWARD + " R:" + RIGHTWARD)
 	#	print ("F2:" + FORWARD2 + " L2:" + LEFTWARD2 + " R2:" + RIGHTWARD2)
 	#	print ("F3:" + FORWARD3 + " L3:" + LEFTWARD3 + " R3:" + RIGHTWARD3)
 	# 3 stage maze drawing function.
+	#Maze shufflescroll. 
+	if cantmoveflg==0 and movescrlflg==1:
+		for f in [1, 2]:
+		
+			if usrentry==LEFTWORDBIND:
+				screensurf.scroll(10, 0)
+				screensurf.blit(hscrollmask, (0, 20))
+			if usrentry==RIGHTWODBIND:
+				screensurf.scroll(-10, 0)
+				screensurf.blit(hscrollmask, (390, 20))
+			if usrentry==FORWARDWORDBIND:
+				screensurf.scroll(0, 10)
+				screensurf.blit(vscrollmask, (0, 20))
+			if usrentry==BACKWARDWORDBIND:
+				screensurf.scroll(0, -10)
+				screensurf.blit(vscrollmask, (0, 330))
+			screensurf.blit(gamebg, (0, 0))
+			screensurf.blit(hudfacesel, (54, 340))
+			screensurfQ=pygame.transform.scale(screensurf, (scrnx, scrny))
+			screensurfdex.blit(screensurfQ, (0, 0))
+			pygame.display.update()
+			if f==1:
+				time.sleep(0.01)
+			if f==2:
+				time.sleep(0.005)
+		
+	
 	screensurf.fill((100, 120, 100))
 	tilegriddraw2()
 	screensurf.blit(gamebg, (0, 0))
@@ -1394,12 +1556,12 @@ while gameend==('0'):
 	if showlooktext==1:
 		#drawheadertext(looktext, 1)
 		popuptext(looktext)
-		showlooktext=0
+		
 		mipfx.play()
 	if showtiptext==1:
 		#drawheadertext(looktext, 1)
 		popuptext(tiptext)
-		showtiptext=0
+		
 	if hudface=="1":
 		hudfacesel=hudfacecasual
 	elif hudface=="2":
@@ -1457,6 +1619,7 @@ while gameend==('0'):
 	usrentry = ('null')
 	#user prompt loop
 	pygame.event.clear()
+	drawtime=0
 	if skiploop==0:
 		while (usrentry!=FORWARDWORDBIND and usrentry!=BACKWARDWORDBIND and usrentry!=LEFTWORDBIND and usrentry!=RIGHTWODBIND and usrentry!=QUITWORDBIND and usrentry!="l" and usrentry!="t" and usrentry!="debugF" and usrentry!="debugB" and usrentry!="debugL" and usrentry!="debugR"):
 			#drawfoottext(("forward:" + FORWARDWORDBIND + " | backward:" + 	BACKWARDWORDBIND + " | look around: l | talk: t"), 0)
@@ -1479,6 +1642,25 @@ while gameend==('0'):
 			if usrentry=="debugcon":
 				debugcon()
 				break
+			#drawtime += 1
+			if usrentry=="redraw":
+				tilesky1=cloudflow(tilesky1, "+", "0")
+				tilelava=fluidflow(tilelava, "+", "0")
+				tilewater=fluidflow(tilewater, "+", "0")
+				tilegreengoo=fluidflow(tilegreengoo, "+", "0")
+				screensurf.fill((100, 120, 100))
+				tilegriddraw2()
+				screensurf.blit(gamebg, (0, 0))
+				screensurf.blit(hudfacesel, (54, 340))
+				if showlooktext==1:
+					#drawheadertext(looktext, 1)
+					popuptext(looktext)
+					showlooktext=0
+				if showtiptext==1:
+					#drawheadertext(looktext, 1)
+					popuptext(tiptext)
+					showtiptext=0
+				debugmsg("Input timeout, redraw display, flow fluids and clouds")
 			screensurfQ=pygame.transform.scale(screensurf, (scrnx, scrny))
 			screensurfdex.blit(screensurfQ, (0, 0))
 			pygame.display.update()
@@ -1486,7 +1668,12 @@ while gameend==('0'):
 	else:
 		loopskipstop=1
 		
-	
+	if showlooktext==1:
+		#drawheadertext(looktext, 1)
+		showlooktext=0
+	if showtiptext==1:
+					#drawheadertext(looktext, 1)
+		showtiptext=0
 	#print (chr(27) + "[2J" + chr(27) + "[H")
 	#wall detection logic
 	cantmoveflg=0

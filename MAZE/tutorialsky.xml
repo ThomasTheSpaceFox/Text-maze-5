@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<main>
+	<!--note the optional defaulttile attribute-->
+	<setup defaulttile="z"  filter="1" a="50" r="140" g="90" b="20">
+		<mazename>Tutorial Sky: Part Two of the tutorial</mazename>
+		<startposx>5</startposx>
+		<startposy>3</startposy>
+		<subdir>sample</subdir>
+	</setup>
+	<maingrid>tutorialsky.main.grid</maingrid>
+	<forks>
+	</forks>
+	<nodes>
+	</nodes>
+</main>
