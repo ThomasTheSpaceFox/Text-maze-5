@@ -94,7 +94,7 @@ menusel="null"
 simplefontB = pygame.font.SysFont(None, 22)
 simplefont = pygame.font.SysFont(None, 16) #define a simple font from the system fonts
 
-popuptextMENU("Text Maze v5.0 (c) 2015-2016 Thomas Leathers")
+popuptextMENU("Text Maze v5.2 (c) 2015-2017 Thomas Leathers")
 ixreturn=0
 while menusel!="quit":
 	#does things that need done upon returning to the menu from an option.
@@ -105,7 +105,7 @@ while menusel!="quit":
 		screensurf.blit(titlebg, (0, 0))
 		#screensurf.blit(titlescreen, titlescreenbox)
 		screensurf.blit(titlescreen, (0, 20))
-		popuptextMENU("Text Maze v5.0 (c) 2015-2016 Thomas Leathers")
+		popuptextMENU("Text Maze v5.2 (c) 2015-2017 Thomas Leathers")
 		ixreturn=0
 	menucnt=1
 	evhappenflg=0

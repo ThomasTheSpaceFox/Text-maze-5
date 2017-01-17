@@ -227,9 +227,9 @@ hudfacecasual=pygame.image.load(os.path.join('TILE', 'hudfacecasual.png'))
 hudfacebored=pygame.image.load(os.path.join('TILE', 'hudfacebored.png'))
 
 winscreen=pygame.image.load(os.path.join('TILE', 'winscreen.png'))
-#scroll masks
-hscrollmask=pygame.image.load(os.path.join('TILE', 'hscrollmask.png'))
-vscrollmask=pygame.image.load(os.path.join('TILE', 'vscrollmask.png'))
+#scroll masks (no longer used)
+#hscrollmask=pygame.image.load(os.path.join('TILE', 'hscrollmask.png'))
+#vscrollmask=pygame.image.load(os.path.join('TILE', 'vscrollmask.png'))
 
 
 # *.MAZE file data loader
@@ -477,6 +477,106 @@ def tileblit(xval, yval, tilestring, xfoo, yfoo, drawfox=0):
 		overlayscanB(xfoo, yfoo, xval, yval, drawfox, Qinside)
 	#screensurf.blit(tilepost, (0, 0))
 #new function to draw tile grid
+
+def lscrollgrid():
+	screensurfbackup=screensurf.copy()
+	lgridv=pygame.Surface((80, 400))
+	xfoo=FARLEFT3x
+	yfoo=FARLEFT3y
+	tileblit(0, 0, FARLEFT3, xfoo, yfoo)
+	xfoo=FARLEFT2x
+	yfoo=FARLEFT2y
+	tileblit(0, 80, FARLEFT2, xfoo, yfoo)
+	xfoo=FARLEFTx
+	yfoo=FARLEFTy
+	tileblit(0, 160, FARLEFT, xfoo, yfoo)
+	xfoo=FARLEFT0x
+	yfoo=FARLEFT0y
+	tileblit(0, 240, FARLEFT0, xfoo, yfoo)
+	xfoo=FARLEFTZx
+	yfoo=FARLEFTZy
+	tileblit(0, 320, FARLEFTZ, xfoo, yfoo)
+	lgridv.blit(screensurf, (0, 0))
+	screensurf.blit(screensurfbackup, (0, 0))
+	return (lgridv)
+
+#the slight graphical glitch is known, but not signifigant enough to merit rewriting the whole rendering engine.
+def uscrollgrid():
+	screensurfbackup=screensurf.copy()
+	#screensurf=pygame.Surface((400, 400), SRCALPHA)
+	#screensurf.fill((255, 255, 255))
+	ugridv=pygame.Surface((400, 88), SRCALPHA)
+	xfoo=FARLEFT3x
+	yfoo=FARLEFT3y
+	tileblit(0, 8, FARLEFT3, xfoo, yfoo)
+	xfoo=LEFTWARD3x
+	yfoo=LEFTWARD3y
+	tileblit(80, 8, LEFTWARD3, xfoo, yfoo)
+	xfoo=FORWARD2x
+	yfoo=FORWARD2y
+	tileblit(160, 8, FORWARD2, xfoo, yfoo)
+	xfoo=RIGHTWARD3x
+	yfoo=RIGHTWARD3y
+	tileblit(240, 8, RIGHTWARD3, xfoo, yfoo)
+	xfoo=FARRIGHT3x
+	yfoo=FARRIGHT3y
+	tileblit(320, 8, FARRIGHT3, xfoo, yfoo)
+	ugridv.blit(screensurf, (0, 0))
+	#ugridv.fill((25, 25, 25))
+	#pygame.image.save(screensurf, "debug1.png")
+	screensurf.blit(screensurfbackup, (0, 0))
+	
+	return (ugridv)
+
+def bscrollgrid():
+	screensurfbackup=screensurf.copy()
+	#screensurf=pygame.Surface((400, 400), SRCALPHA)
+	#screensurf.fill((255, 255, 255))
+	ugridv=pygame.Surface((400, 88), SRCALPHA)
+	xfoo=FARLEFT0x
+	yfoo=FARLEFT0y
+	tileblit(0, 8, FARLEFT0, xfoo, yfoo)
+	xfoo=LEFTWARD0x
+	yfoo=LEFTWARD0y
+	tileblit(80, 8, LEFTWARD0, xfoo, yfoo)
+	xfoo=BACKWARDx
+	yfoo=BACKWARDy
+	tileblit(160, 8, BACKWARD, xfoo, yfoo)
+	xfoo=RIGHTWARD0x
+	yfoo=RIGHTWARD0y
+	tileblit(240, 8, RIGHTWARD0, xfoo, yfoo)
+	xfoo=FARRIGHT0x
+	yfoo=FARRIGHT0y
+	tileblit(320, 8, FARRIGHT0, xfoo, yfoo)
+	ugridv.blit(screensurf, (0, 0))
+	#ugridv.fill((25, 25, 25))
+	#pygame.image.save(screensurf, "debug1.png")
+	screensurf.blit(screensurfbackup, (0, 0))
+	
+	return (ugridv)
+
+def rscrollgrid():
+	screensurfbackup=screensurf.copy()
+	rgridv=pygame.Surface((80, 400))
+	xfoo=FARRIGHT3x
+	yfoo=FARRIGHT3y
+	tileblit(0, 0, FARRIGHT3, xfoo, yfoo)
+	xfoo=FARRIGHT2x
+	yfoo=FARRIGHT2y
+	tileblit(0, 80, FARRIGHT2, xfoo, yfoo)
+	xfoo=FARRIGHTx
+	yfoo=FARRIGHTy
+	tileblit(0, 160, FARRIGHT, xfoo, yfoo)
+	xfoo=FARRIGHT0x
+	yfoo=FARRIGHT0y
+	tileblit(0, 240, FARRIGHT0, xfoo, yfoo)
+	xfoo=FARRIGHTZx
+	yfoo=FARRIGHTZy
+	tileblit(0, 320, FARRIGHTZ, xfoo, yfoo)
+	rgridv.blit(screensurf, (0, 0))
+	screensurf.blit(screensurfbackup, (0, 0))
+	return (rgridv)
+
 def tilegriddraw2():
 	xfoo=LEFTWARD3x
 	yfoo=LEFTWARD3y
@@ -510,7 +610,7 @@ def tilegriddraw2():
 	tileblit(160, 100, FORWARD, xfoo, yfoo)
 	xfoo=CENTERx
 	yfoo=CENTERy
-	tileblit(160, 180, CENTER, xfoo, yfoo, 1)
+	tileblit(160, 180, CENTER, xfoo, yfoo)
 	xfoo=LEFTWARDx
 	yfoo=LEFTWARDy
 	tileblit(80, 180, LEFTWARD, xfoo, yfoo)
@@ -1112,6 +1212,25 @@ def debugcon():
 		if (USRCMD==("take") and USRTEXT!=""):
 			if USRTEXT in keylist:
 				keylist.remove(USRTEXT)
+		if (USRCMD==("about")):
+			print '''about:
+Text Maze 5 (v5.2)
+(c) 2015-2017 Thomas Leathers
+
+Text-maze 5 is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+      
+Text-maze 5 is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+       
+You should have received a copy of the GNU General Public License
+along with Text-maze 5.  If not, see <http://www.gnu.org/licenses/>.
+'''
+		
 		if (USRCMD==("help")):
 			print '''Help:
 
@@ -1210,6 +1329,49 @@ def popuptext(textto):
 	textbox.centery=380
 	screensurf.blit(text, textbox)
 	
+def playchar():
+	screensurf.blit(playerfuzzshad, (160, 180))
+	if inside==1:
+		if lastmove=="F":
+			screensurf.blit(tileplayer, (160, 180))
+		if lastmove=="B":
+			screensurf.blit(tileplayerB, (160, 180))
+		if lastmove=="L":
+			screensurf.blit(tileplayerL, (160, 180))
+		if lastmove=="R":
+			screensurf.blit(tileplayerR, (160, 180))
+	if inside==0:
+		yshad=(playy + 1)
+		shadblk=lookpoint(playx, yshad)
+		curblk=lookpoint(playx, playy)
+		if shadblk=="1" or shadblk=="R"  or shadblk=="r"  or shadblk=="c"   or shadblk=="t" or shadblk=="Q" or shadblk=="P" or shadblk=="Z" or shadblk=="H" or shadblk=="C":
+			if curblk!="1" and curblk!="R" and curblk!="c" and curblk!="t" and curblk!="r" and curblk!="Q" and curblk!="P" and curblk!="H" and curblk!="Z" and curblk!="C":
+				if lastmove=="F":
+					screensurf.blit(shadtileplayer, (160, 180))
+				if lastmove=="B":
+					screensurf.blit(shadtileplayerB, (160, 180))
+				if lastmove=="L":
+					screensurf.blit(shadtileplayerL, (160, 180))
+				if lastmove=="R":
+					screensurf.blit(shadtileplayerR, (160, 180))
+			else:
+				if lastmove=="F":
+					screensurf.blit(tileplayer, (160, 180))
+				if lastmove=="B":
+					screensurf.blit(tileplayerB, (160, 180))
+				if lastmove=="L":
+					screensurf.blit(tileplayerL, (160, 180))
+				if lastmove=="R":
+					screensurf.blit(tileplayerR, (160, 180))
+		else:
+			if lastmove=="F":
+				screensurf.blit(tileplayer, (160, 180))
+			if lastmove=="B":
+				screensurf.blit(tileplayerB, (160, 180))
+			if lastmove=="L":
+				screensurf.blit(tileplayerL, (160, 180))
+			if lastmove=="R":
+				screensurf.blit(tileplayerR, (160, 180))
 	
 def convdup(convtext):
 	textchunk=""
@@ -1336,6 +1498,7 @@ keybak=["null"]
 skiploop=1
 usrentry="null"
 loopskipstop=0
+screensufbak=screensurf.copy()
 hudfacesel=hudfacecasual
 while gameend==('0'):
 	#POV coordinate determination
@@ -1522,33 +1685,54 @@ while gameend==('0'):
 	# 3 stage maze drawing function.
 	#Maze shufflescroll. 
 	if cantmoveflg==0 and movescrlflg==1:
+		lgrd=lscrollgrid()
+		lgrdvar=-60
+		rgrd=rscrollgrid()
+		rgrdvar=380
+		ugrd=uscrollgrid()
+		ugrdvar=-48
+		bgrd=bscrollgrid()
+		bgrdvar=360
+		#if usrentry==LEFTWORDBIND:
+		#	
+		#elif usrentry==RIGHTWODBIND:
+		#	
+		#elif usrentry==FORWARDWORDBIND:
+		#	
+		#elif usrentry==BACKWARDWORDBIND:
+			
 		for f in [1, 2]:
-		
+			screensurf.blit(screensufbak, (0, 0))
 			if usrentry==LEFTWORDBIND:
-				screensurf.scroll(10, 0)
-				screensurf.blit(hscrollmask, (0, 20))
+				screensurf.scroll(20, 0)
+				screensurf.blit(lgrd, (lgrdvar, 20))
+				lgrdvar += 20
 			if usrentry==RIGHTWODBIND:
-				screensurf.scroll(-10, 0)
-				screensurf.blit(hscrollmask, (390, 20))
+				screensurf.scroll(-20, 0)
+				screensurf.blit(rgrd, (rgrdvar, 20))
+				rgrdvar -= 20
 			if usrentry==FORWARDWORDBIND:
-				screensurf.scroll(0, 10)
-				screensurf.blit(vscrollmask, (0, 20))
+				screensurf.scroll(0, 20)
+				screensurf.blit(ugrd, (0, ugrdvar))
+				ugrdvar += 20
 			if usrentry==BACKWARDWORDBIND:
-				screensurf.scroll(0, -10)
-				screensurf.blit(vscrollmask, (0, 330))
+				screensurf.scroll(0, -20)
+				screensurf.blit(bgrd, (0, bgrdvar))
+				ugrdvar -= 20
+			screensufbak=screensurf.copy()
 			screensurf.blit(gamebg, (0, 0))
 			screensurf.blit(hudfacesel, (54, 340))
+			playchar()
 			screensurfQ=pygame.transform.scale(screensurf, (scrnx, scrny))
 			screensurfdex.blit(screensurfQ, (0, 0))
 			pygame.display.update()
-			if f==1:
-				time.sleep(0.01)
-			if f==2:
-				time.sleep(0.005)
+			time.sleep(0.007)
+			#time.sleep(0.1)
 		
 	
 	screensurf.fill((100, 120, 100))
 	tilegriddraw2()
+	screensufbak=screensurf.copy()
 	screensurf.blit(gamebg, (0, 0))
 	
 	#if cantmoveflg==1:
@@ -1578,6 +1762,8 @@ while gameend==('0'):
 	screensurf.blit(hudfacesel, (54, 340))
 	hudface=hudfacedef
 		
+	#screensufbak=screensurf.copy()
+	playchar()
 	#drawheadertext(("Text-Maze 5 | " + mazetitle), 0)
 	#print(libtextmaze.mazedraw3(FORWARD, BACKWARD, LEFTWARD, RIGHTWARD, FORWARD2, LEFTWARD2, RIGHTWARD2, FORWARD3, LEFTWARD3, RIGHTWARD3))
 	pygame.display.update()
@@ -1660,6 +1846,7 @@ while gameend==('0'):
 					#drawheadertext(looktext, 1)
 					popuptext(tiptext)
 					showtiptext=0
+				playchar()
 				debugmsg("Input timeout, redraw display, flow fluids and clouds")
 			screensurfQ=pygame.transform.scale(screensurf, (scrnx, scrny))
 			screensurfdex.blit(screensurfQ, (0, 0))

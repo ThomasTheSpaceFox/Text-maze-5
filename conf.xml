@@ -1,5 +1,5 @@
 <conf>
 	<anim smoothscrl="1" />
-	<gfx rgbafilter="1" scrx="653" scry="653" />
+	<gfx rgbafilter="1" scrx="400" scry="400" />
 	<sound music="1" />
 </conf>
