@@ -1685,14 +1685,18 @@ while gameend==('0'):
 	# 3 stage maze drawing function.
 	#Maze shufflescroll. 
 	if cantmoveflg==0 and movescrlflg==1:
-		lgrd=lscrollgrid()
-		lgrdvar=-60
-		rgrd=rscrollgrid()
-		rgrdvar=380
-		ugrd=uscrollgrid()
-		ugrdvar=-48
-		bgrd=bscrollgrid()
-		bgrdvar=360
+		if usrentry==LEFTWORDBIND:
+			lgrd=lscrollgrid()
+			lgrdvar=-60
+		elif usrentry==RIGHTWODBIND:
+			rgrd=rscrollgrid()
+			rgrdvar=380
+		elif usrentry==FORWARDWORDBIND:
+			ugrd=uscrollgrid()
+			ugrdvar=-48
+		elif usrentry==BACKWARDWORDBIND:
+			bgrd=bscrollgrid()
+			bgrdvar=360
 		#if usrentry==LEFTWORDBIND:
 		#	
 		#elif usrentry==RIGHTWODBIND:

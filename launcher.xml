@@ -5,6 +5,10 @@
 		<item label="Tutorial" desc="Learn The basics">sample.xml</item>
 		<item label="The Park" desc="A strange seaside park.">park.xml</item>
 	</cat>
+	<cat label="unfinished" desc="these levels are at varying states of development">
+		<item label="Tutorial Sky" desc="another tuturial level.">tutorialsky.xml</item>
+		<item label="Inferno" desc="a firey lava-filled level.">inferno.xml</item>
+	</cat>
 	<cat label="TEST" desc="A TEST">
 	</cat>
 </main>

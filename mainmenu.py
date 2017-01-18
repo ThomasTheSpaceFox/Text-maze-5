@@ -13,7 +13,8 @@ scrny=400
 menitm1='Launcher'
 #menitm2='null'
 #menitm3='null'
-
+windowicon=pygame.image.load(os.path.join('TILE', 'icon32.png'))
+pygame.display.set_icon(windowicon)
 screensurfdex=pygame.display.set_mode((scrnx, scrny), RESIZABLE)
 screensurf=screensurfdex.copy()
 
@@ -28,6 +29,7 @@ for flx in mainlist:
 	findcnt += 1
 
 #load titlescreen image.
+
 titlescreen=pygame.image.load(os.path.join('TILE', 'titlescreen.png'))
 titlebg=pygame.image.load(os.path.join('TILE', 'game-bg.png'))
 
